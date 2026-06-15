@@ -1,0 +1,6 @@
+@LearnapticAPI_HostAddress = http://localhost:5075
+
+GET {{LearnapticAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
