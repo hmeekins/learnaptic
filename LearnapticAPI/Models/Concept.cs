@@ -8,6 +8,5 @@
         public string Title { get; set; } = "";
         public string Explanation { get; set; } = "";
         public List<KeyPoint> KeyPoints { get; set; } = new();
-        public List<Example> Examples { get; set; } = new();
     }
 }
