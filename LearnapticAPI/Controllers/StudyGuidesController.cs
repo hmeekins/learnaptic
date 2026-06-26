@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Learnaptic.Api.Models;
 
 namespace Learnaptic.Api.Controllers
 {
@@ -6,10 +7,12 @@ namespace Learnaptic.Api.Controllers
     [Route("api/study-guides")]
     public class StudyGuidesController : ControllerBase
     {
+        private readonly List<StudyGuide> _studyGuides = [new() { Id = 1, Title = "Sample Study Guide", Description = "A sample study guide for demonstration purposes.", Subject = "Sample Subject", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow}];
+        
         [HttpGet]
-        public string Get()
+        public IActionResult GetStudyGuides()
         {
-            return "Study guides endpoint is working!";
+            return Ok(_studyGuides);
         }
     }
 }
