@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Learnaptic.Api.Models;
+﻿using Learnaptic.Api.Data;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Learnaptic.Api.Controllers
 {
@@ -7,12 +8,17 @@ namespace Learnaptic.Api.Controllers
     [Route("api/study-guides")]
     public class StudyGuidesController : ControllerBase
     {
-        private readonly List<StudyGuide> _studyGuides = [new() { Id = 1, Title = "Sample Study Guide", Description = "A sample study guide for demonstration purposes.", Subject = "Sample Subject", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow}];
-        
-        [HttpGet]
-        public IActionResult GetStudyGuides()
+        private readonly ApplicationDbContext _context;
+
+        public StudyGuidesController(ApplicationDbContext context)
         {
-            return Ok(_studyGuides);
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetStudyGuides()
+        {
+            return Ok(await _context.StudyGuides.ToListAsync());
         }
     }
 }
