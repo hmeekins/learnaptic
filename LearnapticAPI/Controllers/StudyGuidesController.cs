@@ -1,6 +1,9 @@
 ﻿using Learnaptic.Api.Data;
+using Learnaptic.Api.Dtos;
+using Learnaptic.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Learnaptic.Api.Controllers
 {
@@ -30,6 +33,21 @@ namespace Learnaptic.Api.Controllers
                 return NotFound();
             }
             return Ok(studyGuide);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateStudyGuide(CreateStudyGuideDto dto)
+        {
+            var studyGuide = new StudyGuide
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                Subject = dto.Subject
+            };
+
+            _context.StudyGuides.Add(studyGuide);
+            await _context.SaveChangesAsync();
+            return CreatedAtAction(nameof(GetStudyGuideById), new { id = studyGuide.Id }, studyGuide);
         }
     }
 }
