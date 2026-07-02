@@ -42,12 +42,47 @@ namespace Learnaptic.Api.Controllers
             {
                 Title = dto.Title,
                 Description = dto.Description,
-                Subject = dto.Subject
+                Subject = dto.Subject,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
             };
 
             _context.StudyGuides.Add(studyGuide);
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetStudyGuideById), new { id = studyGuide.Id }, studyGuide);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudyGuide(int id, CreateStudyGuideDto dto)
+        {
+            var studyGuide = await _context.StudyGuides.FindAsync(id);
+
+            if (studyGuide == null)
+            {
+                return NotFound();
+            }
+
+            studyGuide.Title = dto.Title;
+            studyGuide.Description = dto.Description;
+            studyGuide.Subject = dto.Subject;
+            studyGuide.UpdatedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudyGuide(int id)
+        {
+            var studyGuide = await _context.StudyGuides.FindAsync(id);
+
+            if (studyGuide == null)
+            {
+                return NotFound();
+            }
+
+            _context.StudyGuides.Remove(studyGuide);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
