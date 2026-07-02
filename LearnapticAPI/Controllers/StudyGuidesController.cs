@@ -20,5 +20,16 @@ namespace Learnaptic.Api.Controllers
         {
             return Ok(await _context.StudyGuides.ToListAsync());
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetStudyGuideById(int id)
+        {
+            var studyGuide = await _context.StudyGuides.FindAsync(id);
+            if (studyGuide == null)
+            {
+                return NotFound();
+            }
+            return Ok(studyGuide);
+        }
     }
 }
