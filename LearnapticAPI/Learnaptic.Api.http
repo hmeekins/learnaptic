@@ -1,0 +1,39 @@
+@Learnaptic.Api_HostAddress = http://localhost:5075
+@studyGuideId = 1
+
+### Get all study guides
+GET {{Learnaptic.Api_HostAddress}}/api/study-guides
+Accept: application/json
+
+###
+
+### Get a specific study guide by ID
+GET {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
+Accept: application/json
+
+###
+
+### Create a new study guide
+POST {{Learnaptic.Api_HostAddress}}/api/study-guides
+Content-Type: application/json
+
+{
+  "title": "Biology Exam Review",
+  "description": "Chapters 1-3",
+  "subject": "Biology"
+}
+
+###
+
+### Update an existing study guide
+PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
+Content-Type: application/json
+
+{
+  "title": "Updated Biology Exam Review",
+  "description": "Chapters 1-4",
+  "subject": "Biology"
+}
+
+### Delete a study guide
+DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
