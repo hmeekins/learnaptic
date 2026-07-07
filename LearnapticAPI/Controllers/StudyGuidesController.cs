@@ -53,7 +53,7 @@ namespace Learnaptic.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudyGuide(int id, CreateStudyGuideDto dto)
+        public async Task<IActionResult> UpdateStudyGuide(int id, UpdateStudyGuideDto dto)
         {
             var studyGuide = await _context.StudyGuides.FindAsync(id);
 
