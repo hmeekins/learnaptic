@@ -21,7 +21,18 @@ namespace Learnaptic.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetStudyGuides()
         {
-            return Ok(await _context.StudyGuides.ToListAsync());
+            var studyGuides = await _context.StudyGuides
+                .OrderByDescending(sg => sg.LastAccessed)
+                .Select(sg => new StudyGuideListDto
+                {
+                    Id = sg.Id,
+                    Title = sg.Title,
+                    Description = sg.Description,
+                    Subject = sg.Subject
+                }).ToListAsync();
+                
+
+            return Ok(studyGuides);
         }
 
         [HttpGet("{id}")]
@@ -44,7 +55,8 @@ namespace Learnaptic.Api.Controllers
                 Description = dto.Description,
                 Subject = dto.Subject,
                 CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow
+                UpdatedAt = DateTime.UtcNow,
+                LastAccessed = DateTime.UtcNow
             };
 
             _context.StudyGuides.Add(studyGuide);
@@ -66,6 +78,8 @@ namespace Learnaptic.Api.Controllers
             studyGuide.Description = dto.Description;
             studyGuide.Subject = dto.Subject;
             studyGuide.UpdatedAt = DateTime.UtcNow;
+            studyGuide.LastAccessed = DateTime.UtcNow;
+
             await _context.SaveChangesAsync();
             return NoContent();
         }
