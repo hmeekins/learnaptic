@@ -96,7 +96,7 @@ namespace Learnaptic.Api.Migrations
                     b.ToTable("KeyPoints");
                 });
 
-            modelBuilder.Entity("Learnaptic.Api.Models.StudyGuide", b =>
+            modelBuilder.Entity("StudyGuide", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -108,11 +108,12 @@ namespace Learnaptic.Api.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<DateTime>("LastAccessed")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<string>("Subject")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
@@ -129,7 +130,7 @@ namespace Learnaptic.Api.Migrations
 
             modelBuilder.Entity("Learnaptic.Api.Models.Concept", b =>
                 {
-                    b.HasOne("Learnaptic.Api.Models.StudyGuide", "StudyGuide")
+                    b.HasOne("StudyGuide", "StudyGuide")
                         .WithMany("Concepts")
                         .HasForeignKey("StudyGuideId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -140,7 +141,7 @@ namespace Learnaptic.Api.Migrations
 
             modelBuilder.Entity("Learnaptic.Api.Models.Flashcard", b =>
                 {
-                    b.HasOne("Learnaptic.Api.Models.StudyGuide", "StudyGuide")
+                    b.HasOne("StudyGuide", "StudyGuide")
                         .WithMany("Flashcards")
                         .HasForeignKey("StudyGuideId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -165,7 +166,7 @@ namespace Learnaptic.Api.Migrations
                     b.Navigation("KeyPoints");
                 });
 
-            modelBuilder.Entity("Learnaptic.Api.Models.StudyGuide", b =>
+            modelBuilder.Entity("StudyGuide", b =>
                 {
                     b.Navigation("Concepts");
 

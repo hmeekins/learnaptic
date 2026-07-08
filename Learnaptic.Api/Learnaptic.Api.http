@@ -1,5 +1,5 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
-@studyGuideId = 1
+@studyGuideId = 2
 
 ### Get all study guides
 GET {{Learnaptic.Api_HostAddress}}/api/study-guides
