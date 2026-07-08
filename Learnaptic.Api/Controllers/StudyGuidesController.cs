@@ -39,11 +39,21 @@ namespace Learnaptic.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudyGuideById(int id)
         {
-            var studyGuide = await _context.StudyGuides.FindAsync(id);
+            var studyGuide = await _context.StudyGuides
+                .Where(sg => sg.Id == id)
+                .Select(sg => new GetStudyGuideDto
+                {
+                    Id = sg.Id,
+                    Title = sg.Title,
+                    Description = sg.Description,
+                    Subject = sg.Subject,
+                    UpdatedAt = sg.UpdatedAt
+                })
+                .FirstOrDefaultAsync();
+
             if (studyGuide == null)
-            {
                 return NotFound();
-            }
+
             return Ok(studyGuide);
         }
 
