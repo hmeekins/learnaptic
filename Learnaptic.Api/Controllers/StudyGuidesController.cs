@@ -22,14 +22,14 @@ namespace Learnaptic.Api.Controllers
         public async Task<IActionResult> GetStudyGuides()
         {
             var studyGuides = await _context.StudyGuides
-                .OrderByDescending(sg => sg.LastAccessed)
+                .OrderByDescending(sg => sg.LastAccessedAt)
                 .Select(sg => new GetStudyGuideListDto
                 {
                     Id = sg.Id,
                     Title = sg.Title,
                     Description = sg.Description,
                     Subject = sg.Subject,
-                    LastAccessed = sg.LastAccessed
+                    LastAccessedAt = sg.LastAccessedAt
                 }).ToListAsync();
                 
 
@@ -47,7 +47,8 @@ namespace Learnaptic.Api.Controllers
                     Title = sg.Title,
                     Description = sg.Description,
                     Subject = sg.Subject,
-                    UpdatedAt = sg.UpdatedAt
+                    UpdatedAt = sg.UpdatedAt,
+                    CreatedAt = sg.CreatedAt
                 })
                 .FirstOrDefaultAsync();
 
@@ -67,12 +68,22 @@ namespace Learnaptic.Api.Controllers
                 Subject = dto.Subject,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow,
-                LastAccessed = DateTime.UtcNow
+                LastAccessedAt = DateTime.UtcNow
             };
 
             _context.StudyGuides.Add(studyGuide);
             await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetStudyGuideById), new { id = studyGuide.Id }, studyGuide);
+
+            var responseStudyGuide = new GetStudyGuideDto
+            {
+                Id = studyGuide.Id,
+                Title = studyGuide.Title,
+                Description = studyGuide.Description,
+                Subject = studyGuide.Subject,
+                UpdatedAt = studyGuide.UpdatedAt,
+                CreatedAt = studyGuide.CreatedAt
+            };
+            return CreatedAtAction(nameof(GetStudyGuideById), new { id = studyGuide.Id }, responseStudyGuide);
         }
 
         [HttpPut("{id}")]
@@ -89,7 +100,7 @@ namespace Learnaptic.Api.Controllers
             studyGuide.Description = dto.Description;
             studyGuide.Subject = dto.Subject;
             studyGuide.UpdatedAt = DateTime.UtcNow;
-            studyGuide.LastAccessed = DateTime.UtcNow;
+            studyGuide.LastAccessedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
             return NoContent();

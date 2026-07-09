@@ -14,7 +14,7 @@ public class StudyGuide
 
     public DateTime UpdatedAt { get; set; }
 
-    public DateTime LastAccessed { get; set; }
+    public DateTime LastAccessedAt { get; set; }
 
     public List<Concept> Concepts { get; set; } = new();
 
