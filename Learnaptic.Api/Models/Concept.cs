@@ -10,8 +10,6 @@
 
         public string Title { get; set; } = string.Empty;
 
-        public string Explanation { get; set; } = string.Empty;
-
-        public List<KeyPoint> KeyPoints { get; set; } = new();
+        public string Content { get; set; } = string.Empty;
     }
 }
