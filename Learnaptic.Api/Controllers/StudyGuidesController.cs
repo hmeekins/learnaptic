@@ -23,7 +23,7 @@ namespace Learnaptic.Api.Controllers
         {
             var studyGuides = await _context.StudyGuides
                 .OrderByDescending(sg => sg.LastAccessed)
-                .Select(sg => new StudyGuideListDto
+                .Select(sg => new GetStudyGuideListDto
                 {
                     Id = sg.Id,
                     Title = sg.Title,
