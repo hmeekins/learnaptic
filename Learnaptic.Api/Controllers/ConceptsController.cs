@@ -76,7 +76,6 @@ namespace Learnaptic.Api.Controllers
             };
 
             DateTime now = DateTime.UtcNow;
-
             studyGuide.UpdatedAt = now;
             studyGuide.LastAccessedAt = now;
             
@@ -113,7 +112,31 @@ namespace Learnaptic.Api.Controllers
             concept.Content = updateConceptDto.Content;
 
             DateTime now = DateTime.UtcNow;
+            studyGuide.UpdatedAt = now;
+            studyGuide.LastAccessedAt = now;
 
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteConcept(int studyGuideId, int id)
+        {
+            var studyGuide = await _context.StudyGuides.FindAsync(studyGuideId);
+            if (studyGuide == null)
+                return NotFound();
+
+            var concept = await _context.Concepts
+                .FirstOrDefaultAsync(c =>
+                    c.StudyGuideId == studyGuideId &&
+                    c.Id == id);
+
+            if (concept == null)
+                return NotFound();
+
+            _context.Concepts.Remove(concept);
+
+            DateTime now = DateTime.UtcNow;
             studyGuide.UpdatedAt = now;
             studyGuide.LastAccessedAt = now;
 
