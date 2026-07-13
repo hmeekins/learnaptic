@@ -60,14 +60,15 @@ namespace Learnaptic.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStudyGuide(CreateStudyGuideDto dto)
         {
+            DateTime now = DateTime.UtcNow;
             var studyGuide = new StudyGuide
             {
                 Title = dto.Title,
                 Description = dto.Description,
                 Subject = dto.Subject,
-                CreatedAt = DateTime.UtcNow,
-                UpdatedAt = DateTime.UtcNow,
-                LastAccessedAt = DateTime.UtcNow
+                CreatedAt = now,
+                UpdatedAt = now,
+                LastAccessedAt = now
             };
 
             _context.StudyGuides.Add(studyGuide);
@@ -98,8 +99,10 @@ namespace Learnaptic.Api.Controllers
             studyGuide.Title = dto.Title;
             studyGuide.Description = dto.Description;
             studyGuide.Subject = dto.Subject;
-            studyGuide.UpdatedAt = DateTime.UtcNow;
-            studyGuide.LastAccessedAt = DateTime.UtcNow;
+
+            DateTime now = DateTime.UtcNow;
+            studyGuide.UpdatedAt = now;
+            studyGuide.LastAccessedAt = now;
 
             await _context.SaveChangesAsync();
             return NoContent();
