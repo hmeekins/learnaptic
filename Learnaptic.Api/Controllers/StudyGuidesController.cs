@@ -1,6 +1,5 @@
 ﻿using Learnaptic.Api.Data;
 using Learnaptic.Api.Dtos;
-using Learnaptic.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
