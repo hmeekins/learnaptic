@@ -17,6 +17,28 @@ namespace Learnaptic.Api.Controllers
             _context = context;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetConceptList(int studyGuideId)
+        {
+            bool studyGuideExists = await _context.StudyGuides.AnyAsync(sg => sg.Id == studyGuideId);
+
+            if (studyGuideExists)
+                return NotFound();
+
+            var concepts = await _context.Concepts
+                .Where(c => c.StudyGuideId == studyGuideId)
+                .Select(c => new GetConceptDto
+                {
+                    Id = c.Id,
+                    StudyGuideId = c.StudyGuideId,
+                    Title = c.Title,
+                    Content = c.Content
+                })
+                .ToListAsync();
+
+            return Ok(concepts);
+        }
+
         [HttpGet("{id}")] 
         public async Task<IActionResult> GetConceptById(int studyGuideId, int id)
         {
