@@ -8,11 +8,11 @@ namespace Learnaptic.Api.Controllers
 {
     [ApiController]
     [Route("api/study-guides/{studyGuideId}/concepts")]
-    public class ConceptController : ControllerBase
+    public class ConceptsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ConceptController(ApplicationDbContext context)
+        public ConceptsController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -22,7 +22,7 @@ namespace Learnaptic.Api.Controllers
         {
             bool studyGuideExists = await _context.StudyGuides.AnyAsync(sg => sg.Id == studyGuideId);
 
-            if (studyGuideExists)
+            if (!studyGuideExists)
                 return NotFound();
 
             var concepts = await _context.Concepts
@@ -75,8 +75,11 @@ namespace Learnaptic.Api.Controllers
                 Content = createConceptDto.Content
             };
 
-            studyGuide.LastAccessedAt = DateTime.UtcNow;
+            DateTime now = DateTime.UtcNow;
 
+            studyGuide.UpdatedAt = now;
+            studyGuide.LastAccessedAt = now;
+            
             _context.Concepts.Add(newConcept);
             await _context.SaveChangesAsync();
 
@@ -88,7 +91,34 @@ namespace Learnaptic.Api.Controllers
                 Content = newConcept.Content
             };
 
-            return CreatedAtAction(nameof(GetConceptById), new { studyGuideId = studyGuideId, id = newConcept.Id }, createdConceptDto);
+            return CreatedAtAction(nameof(GetConceptById), new { studyGuideId, id = newConcept.Id }, createdConceptDto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateConcept(int studyGuideId, int id, UpdateConceptDto updateConceptDto)
+        {
+            var studyGuide = await _context.StudyGuides.FindAsync(studyGuideId);
+            if (studyGuide == null)
+                return NotFound();
+
+            var concept = await _context.Concepts
+                .FirstOrDefaultAsync(c =>
+                    c.StudyGuideId == studyGuideId &&
+                    c.Id == id);
+
+            if (concept == null)
+                return NotFound();
+
+            concept.Title = updateConceptDto.Title;
+            concept.Content = updateConceptDto.Content;
+
+            DateTime now = DateTime.UtcNow;
+
+            studyGuide.UpdatedAt = now;
+            studyGuide.LastAccessedAt = now;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }
