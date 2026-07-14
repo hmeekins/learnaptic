@@ -18,5 +18,5 @@ public class StudyGuide
 
     public List<Concept> Concepts { get; set; } = new();
 
-    public List<Flashcard> Flashcards { get; set; } = new();
+    public List<StudySet> StudySets { get; set; } = new();
 }

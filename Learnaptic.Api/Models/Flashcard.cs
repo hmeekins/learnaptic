@@ -4,9 +4,9 @@
     {
         public int Id { get; set; }
 
-        public int StudyGuideId { get; set; }
+        public int StudySetId { get; set; }
 
-        public StudyGuide StudyGuide { get; set; } = null!;
+        public StudySet StudySet { get; set; } = null!;
 
         public string Question { get; set; } = string.Empty;
 
