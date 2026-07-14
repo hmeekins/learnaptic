@@ -31,5 +31,29 @@ namespace Learnaptic.Api.Controllers
 
             return Ok(studySets);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetStudySet(int id)
+        {
+            var studySet = await _context.StudySets.FindAsync(id);
+
+            if (studySet == null)
+            {
+                return NotFound();
+            }
+
+            var studySetDto = new GetStudySetDto
+            {
+                Id = studySet.Id,
+                Title = studySet.Title,
+                CreatedAt = studySet.CreatedAt,
+                UpdatedAt = studySet.UpdatedAt
+            };
+
+            studySet.LastAccessedAt = DateTime.Now;
+            await _context.SaveChangesAsync();
+
+            return Ok(studySetDto);
+        }
     }
 }
