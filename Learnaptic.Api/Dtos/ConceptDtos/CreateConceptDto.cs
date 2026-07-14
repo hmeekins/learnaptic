@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Learnaptic.Api.Dtos
+namespace Learnaptic.Api.Dtos.ConceptDtos
 {
-    public class UpdateConceptDto
+    public class CreateConceptDto
     {
         [Required]
         [StringLength(100, MinimumLength = 3)]

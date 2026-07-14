@@ -1,4 +1,4 @@
-﻿namespace Learnaptic.Api.Dtos
+﻿namespace Learnaptic.Api.Dtos.ConceptDtos
 {
     public class GetConceptDto
     {

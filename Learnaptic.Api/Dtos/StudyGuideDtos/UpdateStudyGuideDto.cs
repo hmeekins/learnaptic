@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Learnaptic.Api.Dtos
+namespace Learnaptic.Api.Dtos.StudyGuideDtos
 {
     public class UpdateStudyGuideDto
     {
