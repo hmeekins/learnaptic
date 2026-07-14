@@ -1,4 +1,7 @@
-﻿namespace Learnaptic.Api.Dtos.StudySetDtos
+﻿using Learnaptic.Api.Models;
+using Learnaptic.Api.Dtos.FlashcardDtos;
+
+namespace Learnaptic.Api.Dtos.StudySetDtos
 {
     public class GetStudySetDto
     {
@@ -9,5 +12,7 @@
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+
+        public List<GetFlashcardDto> Flashcards { get; set; } = new List<GetFlashcardDto>();
     }
 }

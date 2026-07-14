@@ -83,6 +83,7 @@ namespace Learnaptic.Api.Controllers
                 UpdatedAt = studyGuide.UpdatedAt,
                 CreatedAt = studyGuide.CreatedAt
             };
+
             return CreatedAtAction(nameof(GetStudyGuideById), new { id = studyGuide.Id }, responseStudyGuide);
         }
 
