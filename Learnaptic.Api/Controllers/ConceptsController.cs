@@ -27,6 +27,7 @@ namespace Learnaptic.Api.Controllers
 
             var concepts = await _context.Concepts
                 .Where(c => c.StudyGuideId == studyGuideId)
+                .OrderBy(c => c.Id)
                 .Select(c => new GetConceptDto
                 {
                     Id = c.Id,

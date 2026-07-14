@@ -1,6 +1,6 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
 @studyGuideId = 2
-@conceptId = 1
+@conceptId = 2
 
 ### Get all study guides
 GET {{Learnaptic.Api_HostAddress}}/api/study-guides
@@ -49,6 +49,7 @@ Content-Type: application/json
 
 ### Update an existing concept for a specific study guide
 PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
+Content-Type: application/json
 {
   "title": "Updated Cell Structure",
   "content": "Cells are the fundamental units of life, and they come in various types..."
