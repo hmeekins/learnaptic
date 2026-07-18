@@ -104,5 +104,66 @@ namespace Learnaptic.Api.Controllers
 
             return CreatedAtAction(nameof(GetStudySet), new { id = studySet.Id }, studySetDto);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateStudySet(int id, UpdateStudySetDto updateStudySetDto)
+        {
+            var studySet = await _context.StudySets
+                .Include(ss => ss.Flashcards)
+                .FirstOrDefaultAsync(ss => ss.Id == id);
+
+            if (studySet == null)
+                return NotFound();
+
+            var existingFlashcards = studySet.Flashcards
+                .ToDictionary(fc => fc.Id);
+
+            var incomingIds = updateStudySetDto.Flashcards
+                .Where(fc => fc.Id.HasValue)
+                .Select(fc => fc.Id.Value)
+                .ToHashSet();
+
+            foreach (var incomingFlashcard in updateStudySetDto.Flashcards)
+            {
+                if (incomingFlashcard.Id.HasValue)
+                {
+                    if (!existingFlashcards.TryGetValue(incomingFlashcard.Id.Value,out var existingFlashcard))
+                    {
+                        return BadRequest(
+                            $"Flashcard {incomingFlashcard.Id.Value} does not belong to this study set.");
+                    }
+
+                    existingFlashcard.Question = incomingFlashcard.Question;
+                    existingFlashcard.Answer = incomingFlashcard.Answer;
+                }
+                else
+                {
+                    var newFlashcard = new Flashcard
+                    {
+                        Question = incomingFlashcard.Question,
+                        Answer = incomingFlashcard.Answer
+                    };
+
+                    studySet.Flashcards.Add(newFlashcard);
+                }
+            }
+
+            var flashcardsToRemove = studySet.Flashcards
+                .Where(fc =>
+                    fc.Id != 0 &&
+                    !incomingIds.Contains(fc.Id))
+                .ToList();
+
+            _context.Flashcards.RemoveRange(flashcardsToRemove);
+
+            DateTime now = DateTime.UtcNow;
+            studySet.Title = updateStudySetDto.Title;
+            studySet.UpdatedAt = now;
+            studySet.LastAccessedAt = now;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
 }
