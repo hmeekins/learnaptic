@@ -2,7 +2,6 @@
 using Learnaptic.Api.Dtos.StudySetDtos;
 using Learnaptic.Api.Dtos.FlashcardDtos;
 using Learnaptic.Api.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -127,7 +126,7 @@ namespace Learnaptic.Api.Controllers
             {
                 if (incomingFlashcard.Id.HasValue)
                 {
-                    if (!existingFlashcards.TryGetValue(incomingFlashcard.Id.Value,out var existingFlashcard))
+                    if (!existingFlashcards.TryGetValue(incomingFlashcard.Id.Value, out var existingFlashcard))
                     {
                         return BadRequest(
                             $"Flashcard {incomingFlashcard.Id.Value} does not belong to this study set.");
@@ -148,10 +147,8 @@ namespace Learnaptic.Api.Controllers
                 }
             }
 
-            var flashcardsToRemove = studySet.Flashcards
-                .Where(fc =>
-                    fc.Id != 0 &&
-                    !incomingIds.Contains(fc.Id))
+            var flashcardsToRemove = existingFlashcards.Values
+                .Where(fc => !incomingIds.Contains(fc.Id))
                 .ToList();
 
             _context.Flashcards.RemoveRange(flashcardsToRemove);
@@ -161,6 +158,21 @@ namespace Learnaptic.Api.Controllers
             studySet.UpdatedAt = now;
             studySet.LastAccessedAt = now;
 
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudySet(int id)
+        {
+            var studySet = await _context.StudySets.FindAsync(id);
+            if (studySet == null)
+            {
+                return NotFound();
+            }
+
+            _context.StudySets.Remove(studySet);
             await _context.SaveChangesAsync();
 
             return NoContent();
