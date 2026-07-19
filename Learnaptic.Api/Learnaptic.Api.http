@@ -1,6 +1,7 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
 @studyGuideId = 2
 @conceptId = 2
+@studySetId = 1
 
 ### Get all study guides
 GET {{Learnaptic.Api_HostAddress}}/api/study-guides
@@ -57,4 +58,58 @@ Content-Type: application/json
 
 ### Delete a concept for a specific study guide
 DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
+
+### Get all Study Sets
+GET {{Learnaptic.Api_HostAddress}}/api/study-sets
+
+### Get a specific Study Set by ID
+GET {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
+
+### Create a new Study Set
+POST {{Learnaptic.Api_HostAddress}}/api/study-sets
+Content-Type: application/json
+{
+  "title": "Biology Study Set",
+  "flashcards": [
+    {
+      "question": "What is mitosis?",
+      "answer": "The process in which a cell divides to produce two genetically identical daughter cells."
+    },
+    {
+      "question": "What is photosynthesis?",
+      "answer": "The process plants use to convert light energy into chemical energy."
+    },
+    {
+      "question": "What is DNA?",
+      "answer": "A molecule that carries genetic information."
+    }
+  ]
+}
+
+### Update an existing Study Set
+PUT {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
+Content-Type: application/json
+{
+  "title": "Updated Biology Study Set",
+  "flashcards": [
+    {
+      "id": 1,
+      "question": "What is mitosis?",
+      "answer": "The process in which a cell divides to produce two genetically identical daughter cells."
+    },
+    {
+      "id": 2,
+      "question": "What is photosynthesis?",
+      "answer": "The process plants use to convert light energy into chemical energy."
+    },
+    {
+      "question": "What is RNA?",
+      "answer": "A molecule that plays a role in coding, decoding, regulation, and expression of genes."
+    }
+  ]
+}
+
+### Delete a Study Set
+DELETE {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
+
 
