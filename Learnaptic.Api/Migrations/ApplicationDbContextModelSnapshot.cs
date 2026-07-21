@@ -45,7 +45,7 @@ namespace Learnaptic.Api.Migrations
 
                     b.HasIndex("StudyGuideId");
 
-                    b.ToTable("Concepts");
+                    b.ToTable("Concepts", (string)null);
                 });
 
             modelBuilder.Entity("Learnaptic.Api.Models.Flashcard", b =>
@@ -71,7 +71,7 @@ namespace Learnaptic.Api.Migrations
 
                     b.HasIndex("StudySetId");
 
-                    b.ToTable("Flashcards");
+                    b.ToTable("Flashcards", (string)null);
                 });
 
             modelBuilder.Entity("Learnaptic.Api.Models.StudySet", b =>
@@ -97,7 +97,7 @@ namespace Learnaptic.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StudySets");
+                    b.ToTable("StudySets", (string)null);
                 });
 
             modelBuilder.Entity("StudyGuide", b =>
@@ -129,7 +129,7 @@ namespace Learnaptic.Api.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("StudyGuides");
+                    b.ToTable("StudyGuides", (string)null);
                 });
 
             modelBuilder.Entity("StudyGuideStudySet", b =>
@@ -144,7 +144,7 @@ namespace Learnaptic.Api.Migrations
 
                     b.HasIndex("StudySetsId");
 
-                    b.ToTable("StudyGuideStudySet");
+                    b.ToTable("StudyGuideStudySet", (string)null);
                 });
 
             modelBuilder.Entity("Learnaptic.Api.Models.Concept", b =>

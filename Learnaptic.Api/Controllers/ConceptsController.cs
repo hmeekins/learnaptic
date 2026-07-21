@@ -17,49 +17,6 @@ namespace Learnaptic.Api.Controllers
             _context = context;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetConceptList(int studyGuideId)
-        {
-            bool studyGuideExists = await _context.StudyGuides.AnyAsync(sg => sg.Id == studyGuideId);
-
-            if (!studyGuideExists)
-                return NotFound();
-
-            var concepts = await _context.Concepts
-                .Where(c => c.StudyGuideId == studyGuideId)
-                .OrderBy(c => c.Id)
-                .Select(c => new GetConceptDto
-                {
-                    Id = c.Id,
-                    StudyGuideId = c.StudyGuideId,
-                    Title = c.Title,
-                    Content = c.Content
-                })
-                .ToListAsync();
-
-            return Ok(concepts);
-        }
-
-        [HttpGet("{id}")] 
-        public async Task<IActionResult> GetConceptById(int studyGuideId, int id)
-        {
-            var concept = await _context.Concepts
-                .Where(c => c.StudyGuideId == studyGuideId && c.Id == id)
-                .Select(c => new GetConceptDto
-                {
-                    Id = c.Id,
-                    StudyGuideId = c.StudyGuideId,
-                    Title = c.Title,
-                    Content = c.Content
-                })
-                .FirstOrDefaultAsync();
-
-            if (concept == null)
-                return NotFound();
-
-            return Ok(concept);
-        }
-
         [HttpPost]
         public async Task<IActionResult> CreateConcept(int studyGuideId, CreateConceptDto createConceptDto)
         {
@@ -86,12 +43,11 @@ namespace Learnaptic.Api.Controllers
             var createdConceptDto = new GetConceptDto
             {
                 Id = newConcept.Id,
-                StudyGuideId = newConcept.StudyGuideId,
                 Title = newConcept.Title,
                 Content = newConcept.Content
             };
 
-            return CreatedAtAction(nameof(GetConceptById), new { studyGuideId, id = newConcept.Id }, createdConceptDto);
+            return StatusCode(StatusCodes.Status201Created, createdConceptDto);
         }
 
         [HttpPut("{id}")]

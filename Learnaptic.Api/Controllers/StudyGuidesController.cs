@@ -1,5 +1,7 @@
 ﻿using Learnaptic.Api.Data;
 using Learnaptic.Api.Dtos.StudyGuideDtos;
+using Learnaptic.Api.Dtos.ConceptDtos;
+using Learnaptic.Api.Dtos.StudySetDtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -46,6 +48,24 @@ namespace Learnaptic.Api.Controllers
                     Title = sg.Title,
                     Description = sg.Description,
                     Subject = sg.Subject,
+
+                    StudySets = sg.StudySets
+                        .Select(ss => new GetStudySetListDto
+                        {
+                            Id = ss.Id,
+                            Title = ss.Title
+                        })
+                        .ToList(),
+
+                    Concepts = sg.Concepts
+                        .Select(c => new GetConceptDto
+                        {
+                            Id = c.Id,
+                            Title = c.Title,
+                            Content = c.Content
+                        })
+                        .ToList(),
+
                     UpdatedAt = sg.UpdatedAt,
                     CreatedAt = sg.CreatedAt
                 })
@@ -60,7 +80,21 @@ namespace Learnaptic.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStudyGuide(CreateStudyGuideDto dto)
         {
+            var requestedStudySetIds = dto.StudySetIds
+                .Distinct()
+                .ToList();
+
+            var linkedStudySets = await _context.StudySets
+                .Where(ss => requestedStudySetIds.Contains(ss.Id))
+                .ToListAsync();
+
+            if (linkedStudySets.Count != requestedStudySetIds.Count)
+            {
+                return BadRequest("One or more selected study sets do not exist.");
+            }
+
             DateTime now = DateTime.UtcNow;
+
             var studyGuide = new StudyGuide
             {
                 Title = dto.Title,
@@ -68,7 +102,8 @@ namespace Learnaptic.Api.Controllers
                 Subject = dto.Subject,
                 CreatedAt = now,
                 UpdatedAt = now,
-                LastAccessedAt = now
+                LastAccessedAt = now,
+                StudySets = linkedStudySets
             };
 
             _context.StudyGuides.Add(studyGuide);
@@ -80,32 +115,67 @@ namespace Learnaptic.Api.Controllers
                 Title = studyGuide.Title,
                 Description = studyGuide.Description,
                 Subject = studyGuide.Subject,
+
+                StudySets = studyGuide.StudySets
+                    .Select(ss => new GetStudySetListDto
+                    {
+                        Id = ss.Id,
+                        Title = ss.Title
+                    })
+                    .ToList(),
+
+                Concepts = new(),
+
                 UpdatedAt = studyGuide.UpdatedAt,
                 CreatedAt = studyGuide.CreatedAt
             };
 
-            return CreatedAtAction(nameof(GetStudyGuideById), new { id = studyGuide.Id }, responseStudyGuide);
+            return CreatedAtAction(
+                nameof(GetStudyGuideById),
+                new { id = studyGuide.Id },
+                responseStudyGuide);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudyGuide(int id, UpdateStudyGuideDto dto)
         {
-            var studyGuide = await _context.StudyGuides.FindAsync(id);
+            var studyGuide = await _context.StudyGuides
+                .Include(sg => sg.StudySets)
+                .FirstOrDefaultAsync(sg => sg.Id == id);
 
             if (studyGuide == null)
-            {
                 return NotFound();
+
+            var requestedStudySetIds = dto.StudySetIds
+                .Distinct()
+                .ToList();
+
+            var linkedStudySets = await _context.StudySets
+                .Where(ss => requestedStudySetIds.Contains(ss.Id))
+                .ToListAsync();
+
+            if (linkedStudySets.Count != requestedStudySetIds.Count)
+            {
+                return BadRequest("One or more selected study sets do not exist.");
             }
 
             studyGuide.Title = dto.Title;
             studyGuide.Description = dto.Description;
             studyGuide.Subject = dto.Subject;
 
+            studyGuide.StudySets.Clear();
+
+            foreach (var studySet in linkedStudySets)
+            {
+                studyGuide.StudySets.Add(studySet);
+            }
+
             DateTime now = DateTime.UtcNow;
             studyGuide.UpdatedAt = now;
             studyGuide.LastAccessedAt = now;
 
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
 

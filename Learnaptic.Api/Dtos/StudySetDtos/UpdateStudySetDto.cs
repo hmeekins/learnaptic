@@ -12,5 +12,7 @@ namespace Learnaptic.Api.Dtos.StudySetDtos
         [Required]
         [MinLength(2)]
         public List<UpdateFlashcardDto> Flashcards { get; set; } = new();
+
+        public List<int> StudyGuideIds { get; set; } = new();
     }
 }
