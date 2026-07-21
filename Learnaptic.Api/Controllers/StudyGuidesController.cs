@@ -41,40 +41,44 @@ namespace Learnaptic.Api.Controllers
         public async Task<IActionResult> GetStudyGuideById(int id)
         {
             var studyGuide = await _context.StudyGuides
-                .Where(sg => sg.Id == id)
-                .Select(sg => new GetStudyGuideDto
-                {
-                    Id = sg.Id,
-                    Title = sg.Title,
-                    Description = sg.Description,
-                    Subject = sg.Subject,
-
-                    StudySets = sg.StudySets
-                        .Select(ss => new GetStudySetListDto
-                        {
-                            Id = ss.Id,
-                            Title = ss.Title
-                        })
-                        .ToList(),
-
-                    Concepts = sg.Concepts
-                        .Select(c => new GetConceptDto
-                        {
-                            Id = c.Id,
-                            Title = c.Title,
-                            Content = c.Content
-                        })
-                        .ToList(),
-
-                    UpdatedAt = sg.UpdatedAt,
-                    CreatedAt = sg.CreatedAt
-                })
-                .FirstOrDefaultAsync();
+                .Include(sg => sg.StudySets)
+                .Include(sg => sg.Concepts)
+                .FirstOrDefaultAsync(sg => sg.Id == id);
 
             if (studyGuide == null)
+            {
                 return NotFound();
+            }
 
-            return Ok(studyGuide);
+            var studyGuideDto = new GetStudyGuideDto
+            {
+                Id = studyGuide.Id,
+                Title = studyGuide.Title,
+                Description = studyGuide.Description,
+                Subject = studyGuide.Subject,
+                StudySets = studyGuide.StudySets
+                    .Select(ss => new GetStudySetListDto
+                    {
+                        Id = ss.Id,
+                        Title = ss.Title
+                    })
+                    .ToList(),
+                Concepts = studyGuide.Concepts
+                    .Select(c => new GetConceptDto
+                    {
+                        Id = c.Id,
+                        Title = c.Title,
+                        Content = c.Content
+                    })
+                    .ToList(),
+                UpdatedAt = studyGuide.UpdatedAt,
+                CreatedAt = studyGuide.CreatedAt
+            };
+
+            studyGuide.LastAccessedAt = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            return Ok(studyGuideDto);
         }
 
         [HttpPost]
