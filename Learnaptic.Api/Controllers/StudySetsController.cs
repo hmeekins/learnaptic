@@ -166,9 +166,16 @@ namespace Learnaptic.Api.Controllers
             var incomingIds = updateStudySetDto.Flashcards
                 .Where(fc => fc.Id.HasValue)
                 .Select(fc => fc.Id.Value)
-                .ToHashSet();
+                .ToList();
 
-            var invalidFlashcardId = incomingIds
+            if (incomingIds.Count != incomingIds.Distinct().Count())
+            {
+                return BadRequest("Duplicate flashcard IDs are not allowed.");
+            }
+            
+            var incomingIdsSet = incomingIds.ToHashSet();
+
+            var invalidFlashcardId = incomingIdsSet
                 .FirstOrDefault(id => !existingFlashcards.ContainsKey(id));
 
             if (invalidFlashcardId != 0)
@@ -212,7 +219,7 @@ namespace Learnaptic.Api.Controllers
             }
 
             var flashcardsToRemove = existingFlashcards.Values
-                .Where(fc => !incomingIds.Contains(fc.Id))
+                .Where(fc => !incomingIdsSet.Contains(fc.Id))
                 .ToList();
 
             _context.Flashcards.RemoveRange(flashcardsToRemove);
