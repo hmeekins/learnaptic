@@ -2,9 +2,9 @@
 using Learnaptic.Api.Dtos.StudyGuideDtos;
 using Learnaptic.Api.Dtos.ConceptDtos;
 using Learnaptic.Api.Dtos.StudySetDtos;
+using Learnaptic.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 
 namespace Learnaptic.Api.Controllers
 {
@@ -31,8 +31,8 @@ namespace Learnaptic.Api.Controllers
                     Description = sg.Description,
                     Subject = sg.Subject,
                     LastAccessedAt = sg.LastAccessedAt
-                }).ToListAsync();
-                
+                })
+                .ToListAsync();
 
             return Ok(studyGuides);
         }
@@ -46,9 +46,7 @@ namespace Learnaptic.Api.Controllers
                 .FirstOrDefaultAsync(sg => sg.Id == id);
 
             if (studyGuide == null)
-            {
                 return NotFound();
-            }
 
             var studyGuideDto = new GetStudyGuideDto
             {
@@ -56,6 +54,7 @@ namespace Learnaptic.Api.Controllers
                 Title = studyGuide.Title,
                 Description = studyGuide.Description,
                 Subject = studyGuide.Subject,
+
                 StudySets = studyGuide.StudySets
                     .Select(ss => new GetStudySetListDto
                     {
@@ -63,14 +62,18 @@ namespace Learnaptic.Api.Controllers
                         Title = ss.Title
                     })
                     .ToList(),
+
                 Concepts = studyGuide.Concepts
+                    .OrderBy(c => c.Position)
                     .Select(c => new GetConceptDto
                     {
                         Id = c.Id,
                         Title = c.Title,
-                        Content = c.Content
+                        Content = c.Content,
+                        Position = c.Position
                     })
                     .ToList(),
+
                 UpdatedAt = studyGuide.UpdatedAt,
                 CreatedAt = studyGuide.CreatedAt
             };
@@ -94,7 +97,8 @@ namespace Learnaptic.Api.Controllers
 
             if (linkedStudySets.Count != requestedStudySetIds.Count)
             {
-                return BadRequest("One or more selected study sets do not exist.");
+                return BadRequest(
+                    "One or more selected study sets do not exist.");
             }
 
             DateTime now = DateTime.UtcNow;
@@ -107,7 +111,16 @@ namespace Learnaptic.Api.Controllers
                 CreatedAt = now,
                 UpdatedAt = now,
                 LastAccessedAt = now,
-                StudySets = linkedStudySets
+                StudySets = linkedStudySets,
+
+                Concepts = dto.Concepts
+                    .Select((c, position) => new Concept
+                    {
+                        Title = c.Title,
+                        Content = c.Content,
+                        Position = position
+                    })
+                    .ToList()
             };
 
             _context.StudyGuides.Add(studyGuide);
@@ -128,7 +141,16 @@ namespace Learnaptic.Api.Controllers
                     })
                     .ToList(),
 
-                Concepts = new(),
+                Concepts = studyGuide.Concepts
+                    .OrderBy(c => c.Position)
+                    .Select(c => new GetConceptDto
+                    {
+                        Id = c.Id,
+                        Title = c.Title,
+                        Content = c.Content,
+                        Position = c.Position
+                    })
+                    .ToList(),
 
                 UpdatedAt = studyGuide.UpdatedAt,
                 CreatedAt = studyGuide.CreatedAt
@@ -141,10 +163,13 @@ namespace Learnaptic.Api.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudyGuide(int id, UpdateStudyGuideDto dto)
+        public async Task<IActionResult> UpdateStudyGuide(
+            int id,
+            UpdateStudyGuideDto dto)
         {
             var studyGuide = await _context.StudyGuides
                 .Include(sg => sg.StudySets)
+                .Include(sg => sg.Concepts)
                 .FirstOrDefaultAsync(sg => sg.Id == id);
 
             if (studyGuide == null)
@@ -160,7 +185,37 @@ namespace Learnaptic.Api.Controllers
 
             if (linkedStudySets.Count != requestedStudySetIds.Count)
             {
-                return BadRequest("One or more selected study sets do not exist.");
+                return BadRequest(
+                    "One or more selected study sets do not exist.");
+            }
+
+            var existingConcepts = studyGuide.Concepts
+                .ToDictionary(c => c.Id);
+
+            var incomingConceptIds = dto.Concepts
+                .Where(c => c.Id.HasValue)
+                .Select(c => c.Id!.Value)
+                .ToList();
+
+            if (incomingConceptIds.Count !=
+                incomingConceptIds.Distinct().Count())
+            {
+                return BadRequest(
+                    "Duplicate concept IDs are not allowed.");
+            }
+
+            var incomingConceptIdSet =
+                incomingConceptIds.ToHashSet();
+
+            var invalidConceptId = incomingConceptIdSet
+                .FirstOrDefault(
+                    conceptId =>
+                        !existingConcepts.ContainsKey(conceptId));
+
+            if (invalidConceptId != 0)
+            {
+                return BadRequest(
+                    $"Concept {invalidConceptId} does not belong to this study guide.");
             }
 
             studyGuide.Title = dto.Title;
@@ -174,6 +229,40 @@ namespace Learnaptic.Api.Controllers
                 studyGuide.StudySets.Add(studySet);
             }
 
+            for (int position = 0; position < dto.Concepts.Count; position++)
+            {
+                var incomingConcept = dto.Concepts[position];
+
+                if (incomingConcept.Id.HasValue)
+                {
+                    var existingConcept = existingConcepts[incomingConcept.Id.Value];
+
+                    existingConcept.Title = incomingConcept.Title;
+
+                    existingConcept.Content = incomingConcept.Content;
+
+                    existingConcept.Position = position;
+                }
+                else
+                {
+                    var newConcept = new Concept
+                    {
+                        Title = incomingConcept.Title,
+                        Content = incomingConcept.Content,
+                        Position = position
+                    };
+
+                    studyGuide.Concepts.Add(newConcept);
+                }
+            }
+
+            var conceptsToRemove = existingConcepts.Values
+                .Where(c =>
+                    !incomingConceptIdSet.Contains(c.Id))
+                .ToList();
+
+            _context.Concepts.RemoveRange(conceptsToRemove);
+
             DateTime now = DateTime.UtcNow;
             studyGuide.UpdatedAt = now;
             studyGuide.LastAccessedAt = now;
@@ -186,15 +275,15 @@ namespace Learnaptic.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudyGuide(int id)
         {
-            var studyGuide = await _context.StudyGuides.FindAsync(id);
+            var studyGuide =
+                await _context.StudyGuides.FindAsync(id);
 
             if (studyGuide == null)
-            {
                 return NotFound();
-            }
 
             _context.StudyGuides.Remove(studyGuide);
             await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }

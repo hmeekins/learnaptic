@@ -1,75 +1,100 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
-@studyGuideId = 2
-@conceptId = 2
+@studyGuideId = 4
 @studySetId = 1
 
-### Get all study guides
+###############################################
+# STUDY GUIDES
+###############################################
+
+### Get all Study Guides
 GET {{Learnaptic.Api_HostAddress}}/api/study-guides
 Accept: application/json
 
-### Get a specific study guide by ID
+
+### Get a specific Study Guide by ID
 GET {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 Accept: application/json
 
-### Create a new study guide
+
+### Create a new Study Guide
 POST {{Learnaptic.Api_HostAddress}}/api/study-guides
 Content-Type: application/json
 
 {
   "title": "Biology Exam Review",
-  "description": "Chapters 1-3",
-  "subject": "Biology"
+  "description": "Chapters 1-4",
+  "subject": "Biology",
+  "studySetIds": [],
+  "concepts": [
+    {
+      "title": "Cell Structure",
+      "content": "Cells are the basic structural and functional units of living organisms."
+    },
+    {
+      "title": "DNA",
+      "content": "DNA contains the genetic instructions used in the development and functioning of living organisms."
+    },
+    {
+      "title": "Photosynthesis",
+      "content": "Photosynthesis is the process plants use to convert light energy into chemical energy."
+    }
+  ]
 }
 
-### Update an existing study guide
+
+### Update an existing Study Guide
 PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 Content-Type: application/json
 
 {
   "title": "Updated Biology Exam Review",
-  "description": "Chapters 1-4",
-  "subject": "Biology"
+  "description": "Chapters 1-5",
+  "subject": "Biology",
+  "studySetIds": [],
+  "concepts": [
+    {
+      "id": 3,
+      "title": "Updated Cell Structure",
+      "content": "Cells are the fundamental structural and functional units of all living organisms."
+    },
+    {
+      "id": 4,
+      "title": "DNA and Genetics",
+      "content": "DNA stores genetic information and provides instructions used by living organisms."
+    },
+    {
+      "title": "RNA",
+      "content": "RNA plays important roles in gene expression and protein synthesis."
+    }
+  ]
 }
 
-### Delete a study guide
+
+### Delete a Study Guide
 DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 
-### Get all concepts for a specific study guide
-GET {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts
 
-### Get a specific concept by ID for a specific study guide
-GET {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
-
-### Create a new concept for a specific study guide
-POST {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts
-Content-Type: application/json
-{
-  "title": "Cell Structure",
-  "content": "Cells are the basic building blocks of all living organisms..."
-}
-
-### Update an existing concept for a specific study guide
-PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
-Content-Type: application/json
-{
-  "title": "Updated Cell Structure",
-  "content": "Cells are the fundamental units of life, and they come in various types..."
-}
-
-### Delete a concept for a specific study guide
-DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
+###############################################
+# STUDY SETS
+###############################################
 
 ### Get all Study Sets
 GET {{Learnaptic.Api_HostAddress}}/api/study-sets
+Accept: application/json
+
 
 ### Get a specific Study Set by ID
 GET {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
+Accept: application/json
+
 
 ### Create a new Study Set
 POST {{Learnaptic.Api_HostAddress}}/api/study-sets
 Content-Type: application/json
+
 {
   "title": "Biology Study Set",
+  "studyGuideIds": [],
   "flashcards": [
     {
       "question": "What is mitosis?",
@@ -86,16 +111,19 @@ Content-Type: application/json
   ]
 }
 
+
 ### Update an existing Study Set
 PUT {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
 Content-Type: application/json
+
 {
   "title": "Updated Biology Study Set",
+  "studyGuideIds": [],
   "flashcards": [
     {
       "id": 1,
       "question": "What is mitosis?",
-      "answer": "The process in which a cell divides to produce two genetically identical daughter cells."
+      "answer": "Mitosis is the process in which a cell divides to produce two genetically identical daughter cells."
     },
     {
       "id": 2,
@@ -109,7 +137,6 @@ Content-Type: application/json
   ]
 }
 
+
 ### Delete a Study Set
 DELETE {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
-
-

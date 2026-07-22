@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Learnaptic.Api.Dtos.ConceptDtos;
+using System.ComponentModel.DataAnnotations;
 
 namespace Learnaptic.Api.Dtos.StudyGuideDtos
 {
@@ -13,6 +14,8 @@ namespace Learnaptic.Api.Dtos.StudyGuideDtos
 
         [StringLength(40, MinimumLength = 1)]
         public string? Subject { get; set; }
+
+        public List<UpdateConceptDto> Concepts { get; set; } = new();
 
         public List<int> StudySetIds { get; set; } = new();
     }
