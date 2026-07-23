@@ -1,6 +1,6 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
 @studyGuideId = 4
-@studySetId = 1
+@studySetId = 2
 
 ###############################################
 # STUDY GUIDES
@@ -121,12 +121,12 @@ Content-Type: application/json
   "studyGuideIds": [],
   "flashcards": [
     {
-      "id": 1,
+      "id": 5,
       "question": "What is mitosis?",
       "answer": "Mitosis is the process in which a cell divides to produce two genetically identical daughter cells."
     },
     {
-      "id": 2,
+      "id": 6,
       "question": "What is photosynthesis?",
       "answer": "The process plants use to convert light energy into chemical energy."
     },
