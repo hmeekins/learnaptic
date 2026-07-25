@@ -1,10 +1,9 @@
-import './App.css'
+import StudyGuideCard from './components/StudyGuideCard.tsx'
 
 function App() {
   return (
     <main>
-      <h1>Learnaptic</h1>
-      <h2>Study Guides</h2>
+      <StudyGuideCard />
     </main>
   )
 }
