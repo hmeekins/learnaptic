@@ -28,7 +28,6 @@ namespace Learnaptic.Api.Controllers
                 {
                     Id = sg.Id,
                     Title = sg.Title,
-                    Description = sg.Description,
                     Subject = sg.Subject,
                     LastAccessedAt = sg.LastAccessedAt
                 })
