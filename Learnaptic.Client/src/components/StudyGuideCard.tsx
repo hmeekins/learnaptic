@@ -7,7 +7,6 @@ type StudyGuideCardProps = {
 }
 
 function StudyGuideCard(props: StudyGuideCardProps) {
-    
     return (
         <div>
             <h2>{props.title}</h2>

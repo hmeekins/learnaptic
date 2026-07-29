@@ -1,5 +1,4 @@
-function StudyGuideListPage()
-{
+function StudyGuideListPage() {
     return( 
     <main>
         <h1>Study Guides</h1>
