@@ -3,6 +3,7 @@ type StudyGuideCardProps = {
     title: string;
     subject?: string;
     lastAccessed: string;
+    onDelete: () => void;
 }
 
 function StudyGuideCard(props: StudyGuideCardProps) {
@@ -11,7 +12,8 @@ function StudyGuideCard(props: StudyGuideCardProps) {
         <div>
             <h2>{props.title}</h2>
             {props.subject && <p>{props.subject}</p>}
-            <p>Last Accessed:{props.lastAccessed}</p>
+            <p>Last Accessed: {props.lastAccessed}</p>
+            <button onClick={props.onDelete}>Delete Study Guide</button>
         </div>
     )
 }
