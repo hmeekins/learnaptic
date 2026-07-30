@@ -1,9 +1,9 @@
 type StudyGuideCardProps = {
-    id: number;
-    title: string;
-    subject?: string;
-    lastAccessed: string;
-    onDelete: () => void;
+    id: number
+    title: string
+    subject?: string
+    lastAccessed: string
+    onDelete: () => void
 }
 
 function StudyGuideCard(props: StudyGuideCardProps) {

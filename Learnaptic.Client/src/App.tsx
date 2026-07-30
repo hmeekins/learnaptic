@@ -1,7 +1,8 @@
+import StudyGuideListPage from "./pages/StudyGuideListPage"
+
 function App() {
   return (
-    <main>
-    </main>
+    <StudyGuideListPage />
   )
 }
 
