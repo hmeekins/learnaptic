@@ -17,11 +17,8 @@ function StudyGuideListPage() {
         () => {
             async function loadStudyGuides() {
                 const response = await fetch("https://localhost:7057/api/study-guides")
-                console.log("Status:", response.status)
-                console.log("OK:", response.ok)
                 const data = await response.json()
-
-                console.log("Data:", data)
+                
                 setStudyGuides(data)
                 
             }
