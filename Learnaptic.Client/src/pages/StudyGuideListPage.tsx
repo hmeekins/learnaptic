@@ -1,6 +1,7 @@
+import { useEffect, useState } from "react"
+import { useNavigate } from "react-router"
 import NavBar from "../components/NavBar"
 import StudyGuideCard from "../components/StudyGuideCard"
-import { useEffect, useState } from "react"
 
 type StudyGuideListItem =
     {
@@ -11,6 +12,7 @@ type StudyGuideListItem =
     }
 
 function StudyGuideListPage() {
+    const navigate = useNavigate()
     const [studyGuides, setStudyGuides] = useState<StudyGuideListItem[]>([])
 
     useEffect(
@@ -46,7 +48,7 @@ function StudyGuideListPage() {
                     lastAccessedAt={guide.lastAccessedAt}
                     onDelete={() => handleDeleteStudyGuide(guide.id)}
                 />)}
-                <button>Create New Study Guide</button>
+                <button onClick={() => navigate("/study-guides/new")}>Create New Study Guide</button>
             </main>
         </>
     )
