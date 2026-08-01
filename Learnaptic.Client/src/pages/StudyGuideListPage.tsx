@@ -30,8 +30,21 @@ function StudyGuideListPage() {
         []
     )
 
-    function handleDeleteStudyGuide(idToDelete: number) {
-        setStudyGuides(previousStudyGuides => previousStudyGuides.filter(guide => guide.id !== idToDelete))
+    async function handleDeleteStudyGuide(idToDelete: number) {
+        const response = await fetch(
+            `https://localhost:7057/api/study-guides/${idToDelete}`,
+            {
+                method: "DELETE"
+            }
+        )
+
+        if (!response.ok) {
+            throw new Error(`Failed to delete study guide: ${response.status}`)
+        }
+
+        setStudyGuides(previousStudyGuides =>
+            previousStudyGuides.filter(guide => guide.id !== idToDelete)
+        )
     }
 
     return (
