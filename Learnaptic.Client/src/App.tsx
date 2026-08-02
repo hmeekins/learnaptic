@@ -1,9 +1,7 @@
-import StudyGuideListPage from "./pages/StudyGuideListPage"
+import StudyGuideListPage from "./pages/StudyGuideListPage";
 
 function App() {
-  return (
-    <StudyGuideListPage />
-  )
+  return <StudyGuideListPage />;
 }
 
-export default App
+export default App;
