@@ -1,11 +1,30 @@
 import { useState } from "react";
 import NavBar from "../components/NavBar";
 import TextInput from "../components/TextInput";
+import type { StudyGuide } from "../types/StudyGuide";
 
 function CreateStudyGuidePage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [subject, setSubject] = useState("");
+
+  async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (title.trim() === "") {
+      return;
+    }
+
+    const studyGuideData: StudyGuide = {
+      title: title.trim(),
+    };
+    if (description.trim() !== "") {
+      studyGuideData.description = description.trim();
+    }
+    if (subject.trim() !== "") {
+      studyGuideData.subject = subject.trim();
+    }
+    console.log(studyGuideData);
+  }
 
   return (
     <>
@@ -14,7 +33,7 @@ function CreateStudyGuidePage() {
         <h1>Create Study Guide</h1>
         <p>Create a new study guide to organize your learning.</p>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <TextInput
             id="title"
             label="Title"
