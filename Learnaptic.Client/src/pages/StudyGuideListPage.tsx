@@ -33,9 +33,7 @@ function StudyGuideListPage() {
     async function handleDeleteStudyGuide(idToDelete: number) {
         const response = await fetch(
             `https://localhost:7057/api/study-guides/${idToDelete}`,
-            {
-                method: "DELETE"
-            }
+            {method: "DELETE"}
         )
 
         if (!response.ok) {
