@@ -1,12 +1,15 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import NavBar from "../components/NavBar";
 import TextInput from "../components/TextInput";
-import type { StudyGuide } from "../types/StudyGuide";
+import type { CreateStudyGuideRequest } from "../types/CreateStudyGuideRequest";
 
 function CreateStudyGuidePage() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [subject, setSubject] = useState("");
+
+  const navigate = useNavigate();
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -14,16 +17,28 @@ function CreateStudyGuidePage() {
       return;
     }
 
-    const studyGuideData: StudyGuide = {
+    const studyGuideRequest: CreateStudyGuideRequest = {
       title: title.trim(),
     };
     if (description.trim() !== "") {
-      studyGuideData.description = description.trim();
+      studyGuideRequest.description = description.trim();
     }
     if (subject.trim() !== "") {
-      studyGuideData.subject = subject.trim();
+      studyGuideRequest.subject = subject.trim();
     }
-    console.log(studyGuideData);
+    const response = await fetch("https://localhost:7057/api/study-guides", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(studyGuideRequest),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to create study guide: ${response.status}`);
+    }
+
+    navigate("/study-guides");
   }
 
   return (
