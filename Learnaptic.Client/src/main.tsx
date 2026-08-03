@@ -1,18 +1,25 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { createBrowserRouter, RouterProvider } from "react-router";
-import StudyGuideListPage from "./pages/StudyGuideListPage";
-import CreateStudyGuidePage from "./pages/CreateStudyGuidePage";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
+import * as pages from "./pages";
 import "./index.css";
 
 const router = createBrowserRouter([
   {
+    path: "/",
+    element: <Navigate to="/study-guides" replace />,
+  },
+  {
     path: "/study-guides",
-    Component: StudyGuideListPage,
+    Component: pages.StudyGuideListPage,
   },
   {
     path: "/study-guides/new",
-    Component: CreateStudyGuidePage,
+    Component: pages.CreateStudyGuidePage,
+  },
+  {
+    path: "/study-guides/:id/:slug",
+    Component: pages.ViewStudyGuidePage,
   },
 ]);
 
