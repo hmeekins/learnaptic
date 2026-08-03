@@ -22,7 +22,6 @@ Content-Type: application/json
 
 {
   "title": "Biology Exam Review",
-  "description": "Chapters 1-4",
   "subject": "Biology",
   "studySetIds": [],
   "concepts": [
@@ -48,7 +47,6 @@ Content-Type: application/json
 
 {
   "title": "Updated Biology Exam Review",
-  "description": "Chapters 1-5",
   "subject": "Biology",
   "studySetIds": [],
   "concepts": [

@@ -51,7 +51,6 @@ namespace Learnaptic.Api.Controllers
             {
                 Id = studyGuide.Id,
                 Title = studyGuide.Title,
-                Description = studyGuide.Description,
                 Subject = studyGuide.Subject,
 
                 StudySets = studyGuide.StudySets
@@ -105,7 +104,6 @@ namespace Learnaptic.Api.Controllers
             var studyGuide = new StudyGuide
             {
                 Title = dto.Title,
-                Description = dto.Description,
                 Subject = dto.Subject,
                 CreatedAt = now,
                 UpdatedAt = now,
@@ -129,7 +127,6 @@ namespace Learnaptic.Api.Controllers
             {
                 Id = studyGuide.Id,
                 Title = studyGuide.Title,
-                Description = studyGuide.Description,
                 Subject = studyGuide.Subject,
 
                 StudySets = studyGuide.StudySets
@@ -218,7 +215,6 @@ namespace Learnaptic.Api.Controllers
             }
 
             studyGuide.Title = dto.Title;
-            studyGuide.Description = dto.Description;
             studyGuide.Subject = dto.Subject;
 
             studyGuide.StudySets.Clear();

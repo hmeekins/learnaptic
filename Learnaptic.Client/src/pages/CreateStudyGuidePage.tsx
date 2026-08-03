@@ -6,7 +6,6 @@ import type { CreateStudyGuideRequest } from "../types/CreateStudyGuideRequest";
 
 function CreateStudyGuidePage() {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [subject, setSubject] = useState("");
 
   const navigate = useNavigate();
@@ -20,9 +19,6 @@ function CreateStudyGuidePage() {
     const studyGuideRequest: CreateStudyGuideRequest = {
       title: title.trim(),
     };
-    if (description.trim() !== "") {
-      studyGuideRequest.description = description.trim();
-    }
     if (subject.trim() !== "") {
       studyGuideRequest.subject = subject.trim();
     }
@@ -54,15 +50,6 @@ function CreateStudyGuidePage() {
             label="Title"
             value={title}
             onChange={setTitle}
-          />
-
-          <label htmlFor="description">Description</label>
-          <textarea
-            id="description"
-            name="description"
-            value={description}
-            maxLength={300}
-            onChange={(event) => setDescription(event.target.value)}
           />
 
           <TextInput

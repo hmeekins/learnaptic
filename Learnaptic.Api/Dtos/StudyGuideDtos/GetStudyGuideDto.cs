@@ -9,8 +9,6 @@ namespace Learnaptic.Api.Dtos.StudyGuideDtos
 
         public string Title { get; set; } = string.Empty;
 
-        public string? Description { get; set; }
-
         public string? Subject { get; set; }
 
         public List<GetStudySetListDto> StudySets { get; set; } = new();
