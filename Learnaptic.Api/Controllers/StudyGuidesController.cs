@@ -24,7 +24,7 @@ namespace Learnaptic.Api.Controllers
         {
             var studyGuides = await _context.StudyGuides
                 .OrderByDescending(sg => sg.LastAccessedAt)
-                .Select(sg => new GetStudyGuideListDto
+                .Select(sg => new GetStudyGuideSummaryDto
                 {
                     Id = sg.Id,
                     Title = sg.Title,
@@ -85,71 +85,25 @@ namespace Learnaptic.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateStudyGuide(CreateStudyGuideDto dto)
         {
-            var requestedStudySetIds = dto.StudySetIds
-                .Distinct()
-                .ToList();
-
-            var linkedStudySets = await _context.StudySets
-                .Where(ss => requestedStudySetIds.Contains(ss.Id))
-                .ToListAsync();
-
-            if (linkedStudySets.Count != requestedStudySetIds.Count)
-            {
-                return BadRequest(
-                    "One or more selected study sets do not exist.");
-            }
-
             DateTime now = DateTime.UtcNow;
-
             var studyGuide = new StudyGuide
             {
                 Title = dto.Title,
                 Subject = dto.Subject,
                 CreatedAt = now,
                 UpdatedAt = now,
-                LastAccessedAt = now,
-                StudySets = linkedStudySets,
-
-                Concepts = dto.Concepts
-                    .Select((c, position) => new Concept
-                    {
-                        Title = c.Title,
-                        Content = c.Content,
-                        Position = position
-                    })
-                    .ToList()
+                LastAccessedAt = now
             };
 
             _context.StudyGuides.Add(studyGuide);
             await _context.SaveChangesAsync();
 
-            var responseStudyGuide = new GetStudyGuideDto
+            var responseStudyGuide = new GetStudyGuideSummaryDto
             {
                 Id = studyGuide.Id,
                 Title = studyGuide.Title,
                 Subject = studyGuide.Subject,
-
-                StudySets = studyGuide.StudySets
-                    .Select(ss => new GetStudySetListDto
-                    {
-                        Id = ss.Id,
-                        Title = ss.Title
-                    })
-                    .ToList(),
-
-                Concepts = studyGuide.Concepts
-                    .OrderBy(c => c.Position)
-                    .Select(c => new GetConceptDto
-                    {
-                        Id = c.Id,
-                        Title = c.Title,
-                        Content = c.Content,
-                        Position = c.Position
-                    })
-                    .ToList(),
-
-                UpdatedAt = studyGuide.UpdatedAt,
-                CreatedAt = studyGuide.CreatedAt
+                LastAccessedAt = studyGuide.LastAccessedAt
             };
 
             return CreatedAtAction(
@@ -163,100 +117,13 @@ namespace Learnaptic.Api.Controllers
             int id,
             UpdateStudyGuideDto dto)
         {
-            var studyGuide = await _context.StudyGuides
-                .Include(sg => sg.StudySets)
-                .Include(sg => sg.Concepts)
-                .FirstOrDefaultAsync(sg => sg.Id == id);
+            var studyGuide = await _context.StudyGuides.FindAsync(id);
 
             if (studyGuide == null)
                 return NotFound();
 
-            var requestedStudySetIds = dto.StudySetIds
-                .Distinct()
-                .ToList();
-
-            var linkedStudySets = await _context.StudySets
-                .Where(ss => requestedStudySetIds.Contains(ss.Id))
-                .ToListAsync();
-
-            if (linkedStudySets.Count != requestedStudySetIds.Count)
-            {
-                return BadRequest(
-                    "One or more selected study sets do not exist.");
-            }
-
-            var existingConcepts = studyGuide.Concepts
-                .ToDictionary(c => c.Id);
-
-            var incomingConceptIds = dto.Concepts
-                .Where(c => c.Id.HasValue)
-                .Select(c => c.Id!.Value)
-                .ToList();
-
-            if (incomingConceptIds.Count !=
-                incomingConceptIds.Distinct().Count())
-            {
-                return BadRequest(
-                    "Duplicate concept IDs are not allowed.");
-            }
-
-            var incomingConceptIdSet =
-                incomingConceptIds.ToHashSet();
-
-            var invalidConceptId = incomingConceptIdSet
-                .FirstOrDefault(
-                    conceptId =>
-                        !existingConcepts.ContainsKey(conceptId));
-
-            if (invalidConceptId != 0)
-            {
-                return BadRequest(
-                    $"Concept {invalidConceptId} does not belong to this study guide.");
-            }
-
             studyGuide.Title = dto.Title;
             studyGuide.Subject = dto.Subject;
-
-            studyGuide.StudySets.Clear();
-
-            foreach (var studySet in linkedStudySets)
-            {
-                studyGuide.StudySets.Add(studySet);
-            }
-
-            for (int position = 0; position < dto.Concepts.Count; position++)
-            {
-                var incomingConcept = dto.Concepts[position];
-
-                if (incomingConcept.Id.HasValue)
-                {
-                    var existingConcept = existingConcepts[incomingConcept.Id.Value];
-
-                    existingConcept.Title = incomingConcept.Title;
-
-                    existingConcept.Content = incomingConcept.Content;
-
-                    existingConcept.Position = position;
-                }
-                else
-                {
-                    var newConcept = new Concept
-                    {
-                        Title = incomingConcept.Title,
-                        Content = incomingConcept.Content,
-                        Position = position
-                    };
-
-                    studyGuide.Concepts.Add(newConcept);
-                }
-            }
-
-            var conceptsToRemove = existingConcepts.Values
-                .Where(c =>
-                    !incomingConceptIdSet.Contains(c.Id))
-                .ToList();
-
-            _context.Concepts.RemoveRange(conceptsToRemove);
 
             DateTime now = DateTime.UtcNow;
             studyGuide.UpdatedAt = now;
