@@ -1,6 +1,7 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
 @studyGuideId = 4
 @studySetId = 2
+@conceptId = 7
 
 ###############################################
 # STUDY GUIDES
@@ -19,58 +20,52 @@ Accept: application/json
 ### Create a new Study Guide
 POST {{Learnaptic.Api_HostAddress}}/api/study-guides
 Content-Type: application/json
-
 {
   "title": "Biology Exam Review",
   "subject": "Biology",
-  "studySetIds": [],
-  "concepts": [
-    {
-      "title": "Cell Structure",
-      "content": "Cells are the basic structural and functional units of living organisms."
-    },
-    {
-      "title": "DNA",
-      "content": "DNA contains the genetic instructions used in the development and functioning of living organisms."
-    },
-    {
-      "title": "Photosynthesis",
-      "content": "Photosynthesis is the process plants use to convert light energy into chemical energy."
-    }
-  ]
 }
 
 
 ### Update an existing Study Guide
 PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 Content-Type: application/json
-
 {
   "title": "Updated Biology Exam Review",
-  "subject": "Biology",
-  "studySetIds": [],
-  "concepts": [
-    {
-      "id": 3,
-      "title": "Updated Cell Structure",
-      "content": "Cells are the fundamental structural and functional units of all living organisms."
-    },
-    {
-      "id": 4,
-      "title": "DNA and Genetics",
-      "content": "DNA stores genetic information and provides instructions used by living organisms."
-    },
-    {
-      "title": "RNA",
-      "content": "RNA plays important roles in gene expression and protein synthesis."
-    }
-  ]
+  "subject": "Biology"
 }
 
 
 ### Delete a Study Guide
 DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 
+
+###############################################
+# CONCEPTS
+###############################################
+
+
+### Create a new Concept for a Study Guide
+POST {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts
+Content-Type: application/json
+{
+  "title": "Cell Division",
+  "content": "The process by which a parent cell divides into two or more daughter cells."
+}
+
+
+### Update an existing Concept for a Study Guide
+PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
+Content-Type: application/json
+{
+  "title": "Updated Cell Division",
+  "content": "The process by which a parent cell divides into two or more daughter cells."
+}
+
+
+### Reorder concepts in Study Guide
+PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/reorder
+Content-Type: application/json
+[4,6,7,3]
 
 ###############################################
 # STUDY SETS

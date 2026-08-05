@@ -9,12 +9,10 @@ namespace Learnaptic.Api.Dtos.StudySetDtos
         [StringLength(200, MinimumLength = 2)]
         public string Title { get; set; } = string.Empty;
 
-        public List<int> StudyGuideIds { get; set; } = new();
-
         [Required]
         [MinLength(2)]
         public List<CreateFlashcardDto> Flashcards { get; set; } = new();
 
-        
+        public List<int> StudyGuideIds { get; set; } = new();
     }
 }
