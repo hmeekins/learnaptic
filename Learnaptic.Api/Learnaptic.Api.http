@@ -22,7 +22,7 @@ POST {{Learnaptic.Api_HostAddress}}/api/study-guides
 Content-Type: application/json
 {
   "title": "Biology Exam Review",
-  "subject": "Biology",
+  "subject": "Biology"
 }
 
 
@@ -30,8 +30,7 @@ Content-Type: application/json
 PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 Content-Type: application/json
 {
-  "title": "Updated Biology Exam Review",
-  "subject": "Biology"
+  "title": "Updated Biology Exam Review"
 }
 
 

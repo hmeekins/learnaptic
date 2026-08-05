@@ -11,9 +11,9 @@ namespace Learnaptic.Api.Dtos.StudyGuideDtos
 
         public string? Subject { get; set; }
 
-        public List<GetStudySetListDto> StudySets { get; set; } = new();
-
         public List<GetConceptDto> Concepts { get; set; } = new();
+
+        public List<GetStudySetListDto> StudySets { get; set; } = new();
 
         public DateTime UpdatedAt { get; set; }
 

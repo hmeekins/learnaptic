@@ -1,7 +1,7 @@
 import NavBar from "../components/NavBar";
 import ConceptTableOfContents from "../components/ConceptTableOfContents";
 
-function ViewStudyGuidePage() {
+function StudyGuidePage() {
   return (
     <>
       <NavBar />
@@ -21,4 +21,4 @@ function ViewStudyGuidePage() {
   );
 }
 
-export default ViewStudyGuidePage;
+export default StudyGuidePage;

@@ -19,7 +19,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/study-guides/:id/:slug",
-    Component: pages.ViewStudyGuidePage,
+    Component: pages.StudyGuidePage,
   },
 ]);
 

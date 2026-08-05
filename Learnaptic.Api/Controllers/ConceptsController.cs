@@ -51,7 +51,6 @@ namespace Learnaptic.Api.Controllers
                 Id = concept.Id,
                 Title = concept.Title,
                 Content = concept.Content,
-                Position = concept.Position
             };
 
             return StatusCode(StatusCodes.Status201Created, response);

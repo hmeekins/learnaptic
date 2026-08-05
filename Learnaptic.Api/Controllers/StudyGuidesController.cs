@@ -53,14 +53,6 @@ namespace Learnaptic.Api.Controllers
                 Title = studyGuide.Title,
                 Subject = studyGuide.Subject,
 
-                StudySets = studyGuide.StudySets
-                    .Select(ss => new GetStudySetListDto
-                    {
-                        Id = ss.Id,
-                        Title = ss.Title
-                    })
-                    .ToList(),
-
                 Concepts = studyGuide.Concepts
                     .OrderBy(c => c.Position)
                     .Select(c => new GetConceptDto
@@ -68,7 +60,14 @@ namespace Learnaptic.Api.Controllers
                         Id = c.Id,
                         Title = c.Title,
                         Content = c.Content,
-                        Position = c.Position
+                    })
+                    .ToList(),
+
+                StudySets = studyGuide.StudySets
+                    .Select(ss => new GetStudySetListDto
+                    {
+                        Id = ss.Id,
+                        Title = ss.Title
                     })
                     .ToList(),
 
