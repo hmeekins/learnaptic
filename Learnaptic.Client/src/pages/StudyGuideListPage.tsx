@@ -54,6 +54,7 @@ function StudyGuideListPage() {
             subject={guide.subject}
             lastAccessedAt={guide.lastAccessedAt}
             onDelete={() => handleDeleteStudyGuide(guide.id)}
+            onClick={() => navigate(`/study-guides/${guide.id}/${guide.title}`)}
           />
         ))}
         <button onClick={() => navigate("/study-guides/new")}>
