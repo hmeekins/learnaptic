@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import createSlug from "../utils/createSlug";
 import NavBar from "../components/NavBar";
 import StudyGuideCard from "../components/StudyGuideCard";
 
@@ -54,7 +55,9 @@ function StudyGuideListPage() {
             subject={guide.subject}
             lastAccessedAt={guide.lastAccessedAt}
             onDelete={() => handleDeleteStudyGuide(guide.id)}
-            onClick={() => navigate(`/study-guides/${guide.id}/${guide.title}`)}
+            onClick={() =>
+              navigate(`/study-guides/${guide.id}/${createSlug(guide.title)}`)
+            }
           />
         ))}
         <button onClick={() => navigate("/study-guides/new")}>
