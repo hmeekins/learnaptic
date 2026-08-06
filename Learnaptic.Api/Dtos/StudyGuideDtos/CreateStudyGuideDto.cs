@@ -1,5 +1,4 @@
-﻿using Learnaptic.Api.Dtos.ConceptDtos;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Learnaptic.Api.Dtos.StudyGuideDtos
 {
