@@ -11,10 +11,12 @@ namespace Learnaptic.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
 
-        public AuthController(UserManager<ApplicationUser> userManager)
+        public AuthController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -29,9 +31,28 @@ namespace Learnaptic.Api.Controllers
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
-            {
                 return BadRequest(result.Errors);
-            }
+
+            return Ok();
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginRequestDto request)
+        {
+            var user = await _userManager.FindByEmailAsync(request.Email);
+
+            if (user is null)
+                return Unauthorized("Invalid email or password.");
+
+            var result = await _signInManager.PasswordSignInAsync(
+                user,
+                request.Password,
+                isPersistent: false,
+                lockoutOnFailure: false
+            );
+
+            if (!result.Succeeded)
+                return Unauthorized("Invalid email or password.");
 
             return Ok();
         }

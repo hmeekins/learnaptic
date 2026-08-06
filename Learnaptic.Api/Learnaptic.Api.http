@@ -144,7 +144,7 @@ POST {{Learnaptic.Api_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "userName": "StudyWizard2",
+  "userName": "StudyWizard",
   "email": "studywizard@example.com",
   "password": "ExamplePassword123!"
 }
