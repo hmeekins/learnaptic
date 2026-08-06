@@ -132,3 +132,19 @@ Content-Type: application/json
 
 ### Delete a Study Set
 DELETE {{Learnaptic.Api_HostAddress}}/api/study-sets/{{studySetId}}
+
+
+###############################################
+# AUTH
+###############################################
+
+
+### Register a new user
+POST {{Learnaptic.Api_HostAddress}}/api/auth/register
+Content-Type: application/json
+
+{
+  "userName": "StudyWizard2",
+  "email": "studywizard@example.com",
+  "password": "ExamplePassword123!"
+}

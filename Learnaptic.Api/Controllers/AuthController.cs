@@ -1,6 +1,8 @@
-﻿using Learnaptic.Api.Models;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
+using Learnaptic.Api.Dtos.AuthDtos;
+using Learnaptic.Api.Models;
 
 namespace Learnaptic.Api.Controllers
 {
@@ -13,6 +15,25 @@ namespace Learnaptic.Api.Controllers
         public AuthController(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterRequestDto request)
+        {
+            var user = new ApplicationUser
+            {
+                UserName = request.UserName,
+                Email = request.Email
+            };
+
+            var result = await _userManager.CreateAsync(user, request.Password);
+
+            if (!result.Succeeded)
+            {
+                return BadRequest(result.Errors);
+            }
+
+            return Ok();
         }
     }
 }
