@@ -148,3 +148,14 @@ Content-Type: application/json
   "email": "studywizard@example.com",
   "password": "ExamplePassword123!"
 }
+
+### Login an existing user
+POST {{Learnaptic.Api_HostAddress}}/api/auth/login
+Content-Type: application/json
+{
+  "email": "studywizard@example.com",
+  "password": "ExamplePassword123!"
+}
+
+### Authorize a user with a token
+GET {{Learnaptic.Api_HostAddress}}/api/auth/me

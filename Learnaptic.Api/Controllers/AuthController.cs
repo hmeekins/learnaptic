@@ -1,8 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
-using Learnaptic.Api.Dtos.AuthDtos;
+﻿using Learnaptic.Api.Dtos.AuthDtos;
 using Learnaptic.Api.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Learnaptic.Api.Controllers
 {
@@ -17,6 +18,29 @@ namespace Learnaptic.Api.Controllers
         {
             _userManager = userManager;
             _signInManager = signInManager;
+        }
+
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var userContext = HttpContext.User;
+            var userIdClaim = userContext.Claims.FirstOrDefault(
+                claim => claim.Type == ClaimTypes.NameIdentifier); 
+
+            var userNameClaim = userContext.Claims.FirstOrDefault(
+                claim => claim.Type == ClaimTypes.Name);
+
+            if (userIdClaim == null || userNameClaim == null)
+                return BadRequest();
+
+            var userResponse = new CurrentUserDto
+            {
+                Id = userIdClaim.Value,
+                UserName = userNameClaim.Value
+            };
+
+            return Ok(userResponse);
         }
 
         [HttpPost("register")]
