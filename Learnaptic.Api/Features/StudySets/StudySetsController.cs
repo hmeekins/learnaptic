@@ -1,6 +1,8 @@
 ﻿using Learnaptic.Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Learnaptic.Api.Features.StudySets.Dtos;
 using Learnaptic.Api.Features.Flashcards.Dtos;
 using Learnaptic.Api.Features.StudyGuides.Dtos;
@@ -8,6 +10,7 @@ using Learnaptic.Api.Features.Flashcards;
 
 namespace Learnaptic.Api.Features.StudySets
 {
+    [Authorize]
     [Route("api/study-sets")]
     [ApiController]
     public class StudySetsController : ControllerBase
@@ -22,7 +25,10 @@ namespace Learnaptic.Api.Features.StudySets
         [HttpGet]
         public async Task<IActionResult> GetStudySets()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var studySets = await _context.StudySets
+                .Where(ss => ss.UserId == userId)
                 .OrderByDescending(ss => ss.LastAccessedAt)
                 .Select(ss => new GetStudySetListDto
                 {
@@ -37,10 +43,12 @@ namespace Learnaptic.Api.Features.StudySets
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudySet(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var studySet = await _context.StudySets
                 .Include(ss => ss.Flashcards)
                 .Include(ss => ss.StudyGuides)
-                .FirstOrDefaultAsync(ss => ss.Id == id);
+                .FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
 
             if (studySet == null)
             {
@@ -77,13 +85,17 @@ namespace Learnaptic.Api.Features.StudySets
         [HttpPost]
         public async Task<IActionResult> CreateStudySet(CreateStudySetDto createStudySetDto)
         {
-            DateTime now = DateTime.UtcNow;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+                return Unauthorized();
+
             var requestedStudyGuideIds = createStudySetDto.StudyGuideIds
                 .Distinct()
                 .ToList();
 
             var linkedStudyGuides = await _context.StudyGuides
-                .Where(sg => requestedStudyGuideIds.Contains(sg.Id))
+                .Where(sg => requestedStudyGuideIds.Contains(sg.Id) && sg.UserId == userId)
                 .ToListAsync();
 
             if (linkedStudyGuides.Count != requestedStudyGuideIds.Count)
@@ -91,13 +103,15 @@ namespace Learnaptic.Api.Features.StudySets
                 return BadRequest("One or more selected study guides do not exist.");
             }
 
+            DateTime now = DateTime.UtcNow;
+
             var studySet = new StudySet
             {
                 Title = createStudySetDto.Title,
                 CreatedAt = now,
                 UpdatedAt = now,
                 LastAccessedAt = now,
-
+                UserId = userId,
                 StudyGuides = linkedStudyGuides,
 
                 Flashcards = createStudySetDto.Flashcards
@@ -139,10 +153,12 @@ namespace Learnaptic.Api.Features.StudySets
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateStudySet(int id, UpdateStudySetDto updateStudySetDto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var studySet = await _context.StudySets
                 .Include(ss => ss.Flashcards)
                 .Include(ss => ss.StudyGuides)
-                .FirstOrDefaultAsync(ss => ss.Id == id);
+                .FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
 
             if (studySet == null)
                 return NotFound();
@@ -152,7 +168,7 @@ namespace Learnaptic.Api.Features.StudySets
                 .ToList();
 
             var linkedStudyGuides = await _context.StudyGuides
-                .Where(sg => requestedStudyGuideIds.Contains(sg.Id))
+                .Where(sg => requestedStudyGuideIds.Contains(sg.Id) && sg.UserId == userId)
                 .ToListAsync();
 
             if (linkedStudyGuides.Count != requestedStudyGuideIds.Count)
@@ -232,7 +248,9 @@ namespace Learnaptic.Api.Features.StudySets
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudySet(int id)
         {
-            var studySet = await _context.StudySets.FindAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var studySet = await _context.StudySets.FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
+
             if (studySet == null)
             {
                 return NotFound();

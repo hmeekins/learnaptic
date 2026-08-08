@@ -1,9 +1,9 @@
 ﻿using Learnaptic.Api.Data;
-using Learnaptic.Api.Features.Concepts.Dtos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using Learnaptic.Api.Features.Concepts.Dtos;
 
 namespace Learnaptic.Api.Features.Concepts
 {
