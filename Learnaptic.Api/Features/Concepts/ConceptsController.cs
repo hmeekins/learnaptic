@@ -1,10 +1,13 @@
 ﻿using Learnaptic.Api.Data;
 using Learnaptic.Api.Features.Concepts.Dtos;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Learnaptic.Api.Features.Concepts
 {
+    [Authorize]
     [ApiController]
     [Route("api/study-guides/{studyGuideId}/concepts")]
     public class ConceptsController : ControllerBase
@@ -19,7 +22,9 @@ namespace Learnaptic.Api.Features.Concepts
         [HttpPost]
         public async Task<IActionResult> CreateConcept(int studyGuideId, CreateConceptDto createConceptDto)
         {
-            var studyGuide = await _context.StudyGuides.FindAsync(studyGuideId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var studyGuide = await _context.StudyGuides.FirstOrDefaultAsync(sg => sg.Id == studyGuideId && sg.UserId == userId);
 
             if (studyGuide == null)
                 return NotFound();
@@ -58,11 +63,13 @@ namespace Learnaptic.Api.Features.Concepts
         [HttpPut("{conceptId}")]
         public async Task<IActionResult> UpdateConcept(int conceptId, int studyGuideId, UpdateConceptDto updateConceptDto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var concept = await _context.Concepts
                 .Include(c => c.StudyGuide)
                 .FirstOrDefaultAsync(c =>
                 c.Id == conceptId &&
-                c.StudyGuideId == studyGuideId);
+                c.StudyGuideId == studyGuideId
+                && c.StudyGuide.UserId == userId);
 
             if (concept == null)
                 return NotFound();
@@ -83,7 +90,9 @@ namespace Learnaptic.Api.Features.Concepts
         [HttpPut("reorder")]
         public async Task<IActionResult> ReorderConcepts(int studyGuideId, List<int> conceptIds)
         {
-            var studyGuide = await _context.StudyGuides.FindAsync(studyGuideId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var studyGuide = await _context.StudyGuides.FirstOrDefaultAsync(sg => sg.Id == studyGuideId && sg.UserId == userId);
 
             if (studyGuide == null)
                 return NotFound();
@@ -125,11 +134,15 @@ namespace Learnaptic.Api.Features.Concepts
         [HttpDelete("{conceptId}")]
         public async Task<IActionResult> DeleteConcept(int conceptId, int studyGuideId)
         {
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var concept = await _context.Concepts
                 .Include(c => c.StudyGuide)
                 .FirstOrDefaultAsync(c =>
                     c.Id == conceptId &&
-                    c.StudyGuideId == studyGuideId);
+                    c.StudyGuideId == studyGuideId &&
+                    c.StudyGuide.UserId == userId);
 
             if (concept == null)
             {
