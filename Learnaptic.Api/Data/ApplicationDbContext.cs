@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Learnaptic.Api.Models;
+using Learnaptic.Api.Features.Flashcards;
+using Learnaptic.Api.Features.StudySets;
+using Learnaptic.Api.Features.Auth;
+using Learnaptic.Api.Features.Concepts;
 
 namespace Learnaptic.Api.Data
 {

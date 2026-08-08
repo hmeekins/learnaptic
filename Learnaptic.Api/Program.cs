@@ -1,5 +1,5 @@
 using Learnaptic.Api.Data;
-using Learnaptic.Api.Models;
+using Learnaptic.Api.Features.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
