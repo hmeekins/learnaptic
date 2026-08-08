@@ -1,12 +1,15 @@
 ﻿using Learnaptic.Api.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Learnaptic.Api.Features.StudyGuides.Dtos;
 using Learnaptic.Api.Features.Concepts.Dtos;
 using Learnaptic.Api.Features.StudySets.Dtos;
 
 namespace Learnaptic.Api.Features.StudyGuides
 {
+    [Authorize]
     [ApiController]
     [Route("api/study-guides")]
     public class StudyGuidesController : ControllerBase
@@ -21,7 +24,10 @@ namespace Learnaptic.Api.Features.StudyGuides
         [HttpGet]
         public async Task<IActionResult> GetStudyGuides()
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var studyGuides = await _context.StudyGuides
+                .Where(sg => sg.UserId == userId)
                 .OrderByDescending(sg => sg.LastAccessedAt)
                 .Select(sg => new GetStudyGuideSummaryDto
                 {
@@ -38,10 +44,12 @@ namespace Learnaptic.Api.Features.StudyGuides
         [HttpGet("{id}")]
         public async Task<IActionResult> GetStudyGuideById(int id)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             var studyGuide = await _context.StudyGuides
                 .Include(sg => sg.StudySets)
                 .Include(sg => sg.Concepts)
-                .FirstOrDefaultAsync(sg => sg.Id == id);
+                .FirstOrDefaultAsync(sg => sg.Id == id && sg.UserId == userId);
 
             if (studyGuide == null)
                 return NotFound();
@@ -83,6 +91,11 @@ namespace Learnaptic.Api.Features.StudyGuides
         [HttpPost]
         public async Task<IActionResult> CreateStudyGuide(CreateStudyGuideDto dto)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (userId == null)
+                return Unauthorized();
+
             DateTime now = DateTime.UtcNow;
             var studyGuide = new StudyGuide
             {
@@ -90,7 +103,8 @@ namespace Learnaptic.Api.Features.StudyGuides
                 Subject = dto.Subject,
                 CreatedAt = now,
                 UpdatedAt = now,
-                LastAccessedAt = now
+                LastAccessedAt = now,
+                UserId = userId
             };
 
             _context.StudyGuides.Add(studyGuide);
@@ -111,11 +125,11 @@ namespace Learnaptic.Api.Features.StudyGuides
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudyGuide(
-            int id,
-            UpdateStudyGuideDto dto)
+        public async Task<IActionResult> UpdateStudyGuide(int id, UpdateStudyGuideDto dto)
         {
-            var studyGuide = await _context.StudyGuides.FindAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var studyGuide = await _context.StudyGuides.FirstOrDefaultAsync(sg => sg.Id == id && sg.UserId == userId);
 
             if (studyGuide == null)
                 return NotFound();
@@ -135,8 +149,9 @@ namespace Learnaptic.Api.Features.StudyGuides
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudyGuide(int id)
         {
-            var studyGuide =
-                await _context.StudyGuides.FindAsync(id);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var studyGuide = await _context.StudyGuides.FirstOrDefaultAsync(sg => sg.Id == id && sg.UserId == userId);
 
             if (studyGuide == null)
                 return NotFound();

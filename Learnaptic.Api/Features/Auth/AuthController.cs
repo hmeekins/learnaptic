@@ -23,20 +23,16 @@ namespace Learnaptic.Api.Features.Auth
         [HttpGet("me")]
         public IActionResult GetCurrentUser()
         {
-            var userContext = HttpContext.User;
-            var userIdClaim = userContext.Claims.FirstOrDefault(
-                claim => claim.Type == ClaimTypes.NameIdentifier); 
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userName = User.FindFirstValue(ClaimTypes.Name);
 
-            var userNameClaim = userContext.Claims.FirstOrDefault(
-                claim => claim.Type == ClaimTypes.Name);
-
-            if (userIdClaim == null || userNameClaim == null)
-                return BadRequest();
+            if (userId == null || userName == null)
+                return Unauthorized();
 
             var userResponse = new CurrentUserDto
             {
-                Id = userIdClaim.Value,
-                UserName = userNameClaim.Value
+                Id = userId,
+                UserName = userName
             };
 
             return Ok(userResponse);
