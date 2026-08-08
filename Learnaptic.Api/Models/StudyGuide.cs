@@ -14,6 +14,10 @@ public class StudyGuide
 
     public DateTime LastAccessedAt { get; set; }
 
+    public string UserId { get; set; } = string.Empty;
+
+    public ApplicationUser User { get; set; } = null!;
+
     public List<Concept> Concepts { get; set; } = new();
 
     public List<StudySet> StudySets { get; set; } = new();
