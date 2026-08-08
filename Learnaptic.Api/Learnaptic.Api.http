@@ -159,3 +159,6 @@ Content-Type: application/json
 
 ### Authorize a user with a token
 GET {{Learnaptic.Api_HostAddress}}/api/auth/me
+
+### Logout a user
+POST {{Learnaptic.Api_HostAddress}}/api/auth/logout
