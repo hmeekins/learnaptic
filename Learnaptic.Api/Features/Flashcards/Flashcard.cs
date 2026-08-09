@@ -10,6 +10,8 @@ namespace Learnaptic.Api.Features.Flashcards
 
         public StudySet StudySet { get; set; } = null!;
 
+        public int Position { get; set; }
+
         public string Question { get; set; } = string.Empty;
 
         public string Answer { get; set; } = string.Empty;
