@@ -163,7 +163,9 @@ namespace Learnaptic.Api.Features.StudySets
             var studySet = await _context.StudySets
                 .Include(ss => ss.Flashcards)
                 .Include(ss => ss.StudyGuides)
-                .FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
+                .FirstOrDefaultAsync(ss =>
+                    ss.Id == id &&
+                    ss.UserId == userId);
 
             if (studySet == null)
                 return NotFound();
@@ -173,39 +175,26 @@ namespace Learnaptic.Api.Features.StudySets
                 .ToList();
 
             var linkedStudyGuides = await _context.StudyGuides
-                .Where(sg => requestedStudyGuideIds.Contains(sg.Id) && sg.UserId == userId)
+                .Where(sg =>
+                    requestedStudyGuideIds.Contains(sg.Id) &&
+                    sg.UserId == userId)
                 .ToListAsync();
 
             if (linkedStudyGuides.Count != requestedStudyGuideIds.Count)
             {
-                return BadRequest("One or more selected study guides do not exist.");
-            }
-
-            var existingFlashcards = studySet.Flashcards
-                .ToDictionary(fc => fc.Id);
-
-            var incomingIds = updateStudySetDto.Flashcards
-                .Where(fc => fc.Id.HasValue)
-                .Select(fc => fc.Id.GetValueOrDefault())
-                .ToList();
-
-            if (incomingIds.Count != incomingIds.Distinct().Count())
-            {
-                return BadRequest("Duplicate flashcard IDs are not allowed.");
-            }
-            
-            var incomingIdsSet = incomingIds.ToHashSet();
-
-            var invalidFlashcardId = incomingIdsSet
-                .FirstOrDefault(id => !existingFlashcards.ContainsKey(id));
-
-            if (invalidFlashcardId != 0)
-            {
                 return BadRequest(
-                    $"Flashcard {invalidFlashcardId} does not belong to this study set.");
+                    "One or more selected study guides do not exist.");
             }
 
-            DateTime now = DateTime.UtcNow;
+            if (!AreFlashcardsValid(
+                studySet,
+                updateStudySetDto.Flashcards))
+            {
+                return BadRequest("Invalid flashcard IDs.");
+            }
+
+            var now = DateTime.UtcNow;
+
             studySet.Title = updateStudySetDto.Title;
             studySet.UpdatedAt = now;
             studySet.LastAccessedAt = now;
@@ -217,9 +206,65 @@ namespace Learnaptic.Api.Features.StudySets
                 studySet.StudyGuides.Add(studyGuide);
             }
 
+            SyncFlashcards(
+                studySet,
+                updateStudySetDto.Flashcards);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteStudySet(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var studySet = await _context.StudySets.FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
+
+            if (studySet == null)
+            {
+                return NotFound();
+            }
+
+            _context.StudySets.Remove(studySet);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        private bool AreFlashcardsValid(StudySet studySet, List<UpdateFlashcardDto> incomingFlashcards)
+        {
+            var existingFlashcardIds = studySet.Flashcards
+                .Select(fc => fc.Id)
+                .ToHashSet();
+
+            var incomingIds = incomingFlashcards
+                .Where(fc => fc.Id.HasValue)
+                .Select(fc => fc.Id.GetValueOrDefault())
+                .ToList();
+
+            if (incomingIds.Count != incomingIds.Distinct().Count())
+                return false;
+
+            if (incomingIds.Any(id => !existingFlashcardIds.Contains(id)))
+                return false;
+
+            return true;
+        }
+
+        private void SyncFlashcards(StudySet studySet, List<UpdateFlashcardDto> incomingFlashcards)
+        {
+            var existingFlashcards = studySet.Flashcards
+                .ToDictionary(fc => fc.Id);
+
+            var incomingIds = incomingFlashcards
+                .Where(fc => fc.Id.HasValue)
+                .Select(fc => fc.Id.GetValueOrDefault())
+                .ToHashSet();
+
             int position = 0;
 
-            foreach (var incomingFlashcard in updateStudySetDto.Flashcards)
+            foreach (var incomingFlashcard in incomingFlashcards)
             {
                 if (incomingFlashcard.Id.HasValue)
                 {
@@ -246,31 +291,10 @@ namespace Learnaptic.Api.Features.StudySets
             }
 
             var flashcardsToRemove = existingFlashcards.Values
-                .Where(fc => !incomingIdsSet.Contains(fc.Id))
+                .Where(fc => !incomingIds.Contains(fc.Id))
                 .ToList();
 
             _context.Flashcards.RemoveRange(flashcardsToRemove);
-
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudySet(int id)
-        {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var studySet = await _context.StudySets.FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
-
-            if (studySet == null)
-            {
-                return NotFound();
-            }
-
-            _context.StudySets.Remove(studySet);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
     }
 }

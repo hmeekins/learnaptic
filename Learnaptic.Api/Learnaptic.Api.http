@@ -144,8 +144,8 @@ POST {{Learnaptic.Api_HostAddress}}/api/auth/register
 Content-Type: application/json
 
 {
-  "userName": "StudyWizard",
-  "email": "studywizard@example.com",
+  "userName": "StudyWizard2",
+  "email": "studywizard2@example.com",
   "password": "ExamplePassword123!"
 }
 
@@ -153,7 +153,7 @@ Content-Type: application/json
 POST {{Learnaptic.Api_HostAddress}}/api/auth/login
 Content-Type: application/json
 {
-  "email": "studywizard@example.com",
+  "email": "studywizard2@example.com",
   "password": "ExamplePassword123!"
 }
 
