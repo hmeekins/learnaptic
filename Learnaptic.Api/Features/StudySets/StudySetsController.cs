@@ -68,7 +68,9 @@ namespace Learnaptic.Api.Features.StudySets
                     Title = sg.Title
                 }).ToList(),
 
-                Flashcards = studySet.Flashcards.Select(fc => new GetFlashcardDto
+                Flashcards = studySet.Flashcards
+                .OrderBy(fc => fc.Position)
+                .Select(fc => new GetFlashcardDto
                 {
                     Id = fc.Id,
                     Question = fc.Question,
@@ -115,10 +117,11 @@ namespace Learnaptic.Api.Features.StudySets
                 StudyGuides = linkedStudyGuides,
 
                 Flashcards = createStudySetDto.Flashcards
-                    .Select(fc => new Flashcard
+                    .Select((fc, index) => new Flashcard
                     {
                         Question = fc.Question,
-                        Answer = fc.Answer
+                        Answer = fc.Answer,
+                        Position = index
                     })
                     .ToList()
             };
@@ -139,12 +142,14 @@ namespace Learnaptic.Api.Features.StudySets
                     Title = sg.Title
                 }).ToList(),
 
-                Flashcards = studySet.Flashcards.Select(fc => new GetFlashcardDto
-                {
-                    Id = fc.Id,
-                    Question = fc.Question,
-                    Answer = fc.Answer
-                }).ToList()
+                Flashcards = studySet.Flashcards
+                    .OrderBy(fc => fc.Position)
+                    .Select(fc => new GetFlashcardDto
+                    {
+                        Id = fc.Id,
+                        Question = fc.Question,
+                        Answer = fc.Answer
+                    }).ToList()
             };
 
             return CreatedAtAction(nameof(GetStudySet), new { id = studySet.Id }, studySetDto);
@@ -212,6 +217,8 @@ namespace Learnaptic.Api.Features.StudySets
                 studySet.StudyGuides.Add(studyGuide);
             }
 
+            int position = 0;
+
             foreach (var incomingFlashcard in updateStudySetDto.Flashcards)
             {
                 if (incomingFlashcard.Id.HasValue)
@@ -221,17 +228,21 @@ namespace Learnaptic.Api.Features.StudySets
 
                     existingFlashcard.Question = incomingFlashcard.Question;
                     existingFlashcard.Answer = incomingFlashcard.Answer;
+                    existingFlashcard.Position = position;
                 }
                 else
                 {
                     var newFlashcard = new Flashcard
                     {
                         Question = incomingFlashcard.Question,
-                        Answer = incomingFlashcard.Answer
+                        Answer = incomingFlashcard.Answer,
+                        Position = position
                     };
 
                     studySet.Flashcards.Add(newFlashcard);
                 }
+
+                position++;
             }
 
             var flashcardsToRemove = existingFlashcards.Values

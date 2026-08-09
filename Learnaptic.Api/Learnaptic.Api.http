@@ -113,14 +113,14 @@ Content-Type: application/json
   "studyGuideIds": [],
   "flashcards": [
     {
-      "id": 5,
-      "question": "What is mitosis?",
-      "answer": "Mitosis is the process in which a cell divides to produce two genetically identical daughter cells."
-    },
-    {
-      "id": 6,
+      "id": 2,
       "question": "What is photosynthesis?",
       "answer": "The process plants use to convert light energy into chemical energy."
+    },
+    {
+      "id": 1,
+      "question": "What is mitosis?",
+      "answer": "Mitosis is the process in which a cell divides to produce two genetically identical daughter cells."
     },
     {
       "question": "What is RNA?",
