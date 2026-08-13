@@ -10,6 +10,10 @@ const router = createBrowserRouter([
     element: <Navigate to="/study-guides" replace />,
   },
   {
+    path: "/login",
+    Component: pages.LoginPage,
+  },
+  {
     path: "/study-guides",
     Component: pages.StudyGuideListPage,
   },
