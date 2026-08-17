@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import type { ApiErrorResponse } from "@/types/Errors/ApiErrorResponse";
 
 function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -59,14 +60,12 @@ function RegisterPage() {
       });
 
       if (!response.ok) {
-        const errors: { code: string; description: string }[] =
-          await response.json();
-
-        const duplicateUsername = errors.some(
+        const data: ApiErrorResponse = await response.json();
+        const duplicateUsername = data.errors.some(
           (error) => error.code === "DuplicateUserName"
         );
 
-        const duplicateEmail = errors.some(
+        const duplicateEmail = data.errors.some(
           (error) => error.code === "DuplicateEmail"
         );
 
@@ -75,7 +74,7 @@ function RegisterPage() {
         } else if (duplicateEmail) {
           setError("An account with that email already exists.");
         } else {
-          setError("Unable to create account. Please check your information.");
+          setError(data.message);
         }
 
         return;

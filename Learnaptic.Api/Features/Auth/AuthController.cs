@@ -1,4 +1,5 @@
 ﻿using Learnaptic.Api.Features.Auth.Dtos;
+using Learnaptic.Api.Features.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -50,7 +51,15 @@ namespace Learnaptic.Api.Features.Auth
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
-                return BadRequest(result.Errors);
+                return BadRequest(new ApiErrorResponse
+                {
+                    Message = "Registration failed.",
+                    Errors = result.Errors.Select(error => new ApiError
+                    {
+                        Code = error.Code,
+                        Message = error.Description
+                    })
+                });
 
             return Ok();
         }
