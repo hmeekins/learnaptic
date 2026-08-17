@@ -5,7 +5,7 @@ namespace Learnaptic.Api.Features.Auth.Dtos
     public class RegisterRequestDto
     {
         [Required]
-        [StringLength(40, MinimumLength = 4)]
+        [StringLength(40, MinimumLength = 3)]
         public string UserName { get; set; } = string.Empty;
 
         [Required]
@@ -13,7 +13,7 @@ namespace Learnaptic.Api.Features.Auth.Dtos
         public string Email { get; set; } = string.Empty;
 
         [Required]
-        [StringLength(100, MinimumLength = 8)]
+        [StringLength(100, MinimumLength = 10)]
         public string Password { get; set; } = string.Empty;
     }
 }

@@ -25,8 +25,23 @@ function RegisterPage() {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!email || !username || !password || !confirmPassword) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters.");
+      return;
+    }
+
+    if (password.length < 10) {
+      setError("Password must be at least 10 characters.");
+      return;
+    }
+
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
@@ -44,7 +59,25 @@ function RegisterPage() {
       });
 
       if (!response.ok) {
-        setError("Unable to create account");
+        const errors: { code: string; description: string }[] =
+          await response.json();
+
+        const duplicateUsername = errors.some(
+          (error) => error.code === "DuplicateUserName"
+        );
+
+        const duplicateEmail = errors.some(
+          (error) => error.code === "DuplicateEmail"
+        );
+
+        if (duplicateUsername) {
+          setError("That username is already taken.");
+        } else if (duplicateEmail) {
+          setError("An account with that email already exists.");
+        } else {
+          setError("Unable to create account. Please check your information.");
+        }
+
         return;
       }
 
@@ -76,7 +109,6 @@ function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="space-y-3">
                 <Label htmlFor="email">Email</Label>
-
                 <Input
                   id="email"
                   type="email"
