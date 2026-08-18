@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { API_URL } from "@/config/api";
 import createSlug from "../utils/createSlug";
 import NavBar from "../components/layout/NavBar";
-import StudyGuideCard from "../components/StudyGuideCard";
+import StudyGuideCard from "../components/notebooks/StudyGuideCard";
 
 type StudyGuideListItem = {
   id: number;
@@ -17,7 +18,7 @@ function StudyGuideListPage() {
 
   useEffect(() => {
     async function loadStudyGuides() {
-      const response = await fetch("https://localhost:7057/api/study-guides");
+      const response = await fetch(`${API_URL}/api/study-guides`);
       const data = await response.json();
 
       setStudyGuides(data);
@@ -27,10 +28,9 @@ function StudyGuideListPage() {
   }, []);
 
   async function handleDeleteStudyGuide(idToDelete: number) {
-    const response = await fetch(
-      `https://localhost:7057/api/study-guides/${idToDelete}`,
-      { method: "DELETE" }
-    );
+    const response = await fetch(`${API_URL}/api/study-guides/${idToDelete}`, {
+      method: "DELETE",
+    });
 
     if (!response.ok) {
       throw new Error(`Failed to delete study guide: ${response.status}`);

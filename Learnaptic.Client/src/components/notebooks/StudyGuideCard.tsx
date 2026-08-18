@@ -1,4 +1,4 @@
-import formatTimeElapsed from "../utils/formatDate";
+import formatTimeElapsed from "@/utils/formatDate";
 
 type StudyGuideCardProps = {
   id: number;

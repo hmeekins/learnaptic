@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { API_URL } from "@/config/api";
 import NavBar from "../components/layout/NavBar";
 import TextInput from "../components/TextInput";
 import type { CreateStudyGuideRequest } from "../types/StudyGuides/CreateStudyGuideRequest";
@@ -23,7 +24,7 @@ function CreateStudyGuidePage() {
     if (subject.trim() !== "") {
       studyGuideRequest.subject = subject.trim();
     }
-    const response = await fetch("https://localhost:7057/api/study-guides", {
+    const response = await fetch(`${API_URL}/api/study-guides`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

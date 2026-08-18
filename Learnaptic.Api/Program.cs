@@ -21,7 +21,7 @@ builder.Services
     {
         options.User.RequireUniqueEmail = true;
 
-        options.Password.RequiredLength = 8;
+        options.Password.RequiredLength = 10;
         options.Password.RequireUppercase = true;
         options.Password.RequireLowercase = true;
         options.Password.RequireDigit = true;
@@ -29,6 +29,13 @@ builder.Services
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
 
 builder.Services.AddCors(options =>
 {

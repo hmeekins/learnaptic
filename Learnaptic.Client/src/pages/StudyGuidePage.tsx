@@ -1,19 +1,18 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
-import type { StudyGuideDetail } from "../types/StudyGuides/StudyGuideDetail";
-import type { Concept } from "../types/Concepts/Concept";
+import { API_URL } from "@/config/api";
 import NavBar from "../components/layout/NavBar";
 import ConceptTableOfContents from "../components/notebooks/ConceptTableOfContents";
-import ConceptCard from "../components/ConceptCard";
+import ConceptCard from "../components/notebooks/ConceptCard";
+import type { StudyGuideDetail } from "../types/StudyGuides/StudyGuideDetail";
+import type { Concept } from "../types/Concepts/Concept";
 
 function StudyGuidePage() {
   const { id } = useParams<{ id: string }>();
   const [studyGuide, setStudyGuide] = useState<StudyGuideDetail | null>(null);
   useEffect(() => {
     async function loadStudyGuide() {
-      const response = await fetch(
-        `https://localhost:7057/api/study-guides/${id}`
-      );
+      const response = await fetch(`${API_URL}/api/study-guides/${id}`);
       const data: StudyGuideDetail = await response.json();
       setStudyGuide(data);
     }

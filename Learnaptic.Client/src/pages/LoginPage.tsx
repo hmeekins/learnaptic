@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import AuthInfoPanel from "@/components/auth/AuthInfoPanel";
+import { API_URL } from "@/config/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useAuth } from "@/AuthContext";
+import AuthInfoPanel from "@/components/auth/AuthInfoPanel";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -20,13 +22,15 @@ function LoginPage() {
 
   const navigate = useNavigate();
 
+  const { refreshUser } = useAuth();
+
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     setLoading(true);
 
     try {
-      const response = await fetch("https://localhost:7057/api/auth/login", {
+      const response = await fetch(`${API_URL}/api/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -40,7 +44,7 @@ function LoginPage() {
         return;
       }
 
-      navigate("/study-guides");
+      await refreshUser();
     } catch {
       setError("An error occurred while trying to log in. Please try again.");
     } finally {

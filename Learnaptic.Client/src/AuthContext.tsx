@@ -5,6 +5,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
+import { API_URL } from "./config/api";
 import type { CurrentUser } from "@/types/User/CurrentUser";
 
 interface AuthProviderProps {
@@ -25,7 +26,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const refreshUser = async () => {
     try {
-      const response = await fetch("https://localhost:7057/api/auth/me", {
+      const response = await fetch(`${API_URL}/api/auth/me`, {
         credentials: "include",
       });
 

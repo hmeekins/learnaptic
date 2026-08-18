@@ -153,7 +153,7 @@ Content-Type: application/json
 POST {{Learnaptic.Api_HostAddress}}/api/auth/login
 Content-Type: application/json
 {
-  "email": "studywizard2@example.com",
+  "email": "studywizard@example.com",
   "password": "ExamplePassword123!"
 }
 
