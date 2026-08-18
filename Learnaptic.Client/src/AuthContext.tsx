@@ -16,6 +16,7 @@ interface AuthContextValue {
   user: CurrentUser | null;
   loading: boolean;
   refreshUser: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -42,17 +43,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const logout = async () => {
+    const response = await fetch(`${API_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to log out.");
+    }
+
+    setUser(null);
+  };
+
   useEffect(() => {
-    const InitializeAuth = async () => {
+    const initializeAuth = async () => {
       await refreshUser();
       setLoading(false);
     };
 
-    InitializeAuth();
+    initializeAuth();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
