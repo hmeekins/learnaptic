@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
-import AuthInfoPanel from "@/components/AuthInfoPanel";
+import AuthInfoPanel from "@/components/auth/AuthInfoPanel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

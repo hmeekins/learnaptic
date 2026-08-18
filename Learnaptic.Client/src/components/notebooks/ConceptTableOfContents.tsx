@@ -1,4 +1,4 @@
-import type { Concept } from "../types/Concepts/Concept";
+import type { Concept } from "../../types/Concepts/Concept";
 
 type ConceptTableOfContentsProps = {
   concepts: Concept[];

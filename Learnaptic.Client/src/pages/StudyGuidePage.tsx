@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import type { StudyGuideDetail } from "../types/StudyGuides/StudyGuideDetail";
 import type { Concept } from "../types/Concepts/Concept";
-import NavBar from "../components/NavBar";
-import ConceptTableOfContents from "../components/ConceptTableOfContents";
+import NavBar from "../components/layout/NavBar";
+import ConceptTableOfContents from "../components/notebooks/ConceptTableOfContents";
 import ConceptCard from "../components/ConceptCard";
 
 function StudyGuidePage() {

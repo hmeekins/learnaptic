@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import createSlug from "../utils/createSlug";
-import NavBar from "../components/NavBar";
+import NavBar from "../components/layout/NavBar";
 import StudyGuideCard from "../components/StudyGuideCard";
 
 type StudyGuideListItem = {
