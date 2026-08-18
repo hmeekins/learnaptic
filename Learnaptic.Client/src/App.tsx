@@ -1,19 +1,25 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import * as pages from "./pages";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import PublicOnlyRoute from "@/components/auth/PublicOnlyRoute";
+import * as pages from "@/pages";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Navigate to="/login" replace />,
-  },
-  {
-    path: "/login",
-    Component: pages.LoginPage,
-  },
-  {
-    path: "/register",
-    Component: pages.RegisterPage,
+    Component: PublicOnlyRoute,
+    children: [
+      {
+        path: "/",
+        element: <Navigate to="/login" replace />,
+      },
+      {
+        path: "/login",
+        Component: pages.LoginPage,
+      },
+      {
+        path: "/register",
+        Component: pages.RegisterPage,
+      },
+    ],
   },
   {
     Component: ProtectedRoute,
