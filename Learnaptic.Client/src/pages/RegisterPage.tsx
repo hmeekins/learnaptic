@@ -22,28 +22,66 @@ function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const hasMinimumLength = password.length >= 10;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialCharacter = /[^a-zA-Z0-9]/.test(password);
+
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const isFormValid = () => {
     if (!email || !username || !password || !confirmPassword) {
       setError("Please fill in all fields.");
-      return;
+      return false;
+    }
+
+    if (password != confirmPassword) {
+      setError("Passwords do not match");
+      return false;
+    }
+
+    if (
+      password.length < 10 ||
+      !/[A-Z]/.test(password) ||
+      !/[a-z]/.test(password) ||
+      !/[0-9]/.test(password) ||
+      !/[^a-zA-Z0-9]/.test(password)
+    ) {
+      setError("Password does not meet requirements");
+      return false;
     }
 
     if (username.length < 3) {
       setError("Username must be at least 3 characters.");
-      return;
+      return false;
     }
 
-    if (password.length < 10) {
-      setError("Password must be at least 10 characters.");
-      return;
-    }
+    return true;
+  };
 
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
+  const handleApiError = (data: ApiErrorResponse) => {
+    const duplicateUsername = data.errors.some(
+      (error) => error.code === "DuplicateUserName"
+    );
+
+    const duplicateEmail = data.errors.some(
+      (error) => error.code === "DuplicateEmail"
+    );
+
+    if (duplicateUsername) {
+      setError("That username is already taken.");
+    } else if (duplicateEmail) {
+      setError("An account with that email already exists.");
+    } else {
+      setError(data.message);
+    }
+  };
+
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!isFormValid()) {
       return;
     }
 
@@ -62,22 +100,7 @@ function RegisterPage() {
 
       if (!response.ok) {
         const data: ApiErrorResponse = await response.json();
-        const duplicateUsername = data.errors.some(
-          (error) => error.code === "DuplicateUserName"
-        );
-
-        const duplicateEmail = data.errors.some(
-          (error) => error.code === "DuplicateEmail"
-        );
-
-        if (duplicateUsername) {
-          setError("That username is already taken.");
-        } else if (duplicateEmail) {
-          setError("An account with that email already exists.");
-        } else {
-          setError(data.message);
-        }
-
+        handleApiError(data);
         return;
       }
 
@@ -152,6 +175,50 @@ function RegisterPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                 />
+                <div className="space-y-1 text-sm text-muted-foreground">
+                  <p>Password must contain:</p>
+                  <ul className="list-disc pl-5">
+                    <li
+                      className={
+                        hasMinimumLength
+                          ? "text-primary"
+                          : "text-muted-foreground"
+                      }
+                    >
+                      At least 10 characters
+                    </li>
+                    <li
+                      className={
+                        hasUppercase ? "text-primary" : "text-muted-foreground"
+                      }
+                    >
+                      One uppercase letter
+                    </li>
+                    <li
+                      className={
+                        hasLowercase ? "text-primary" : "text-muted-foreground"
+                      }
+                    >
+                      One lowercase letter
+                    </li>
+                    <li
+                      className={
+                        hasNumber ? "text-primary" : "text-muted-foreground"
+                      }
+                    >
+                      One number
+                    </li>
+                    <li
+                      className={
+                        hasSpecialCharacter
+                          ? "text-primary"
+                          : "text-muted-foreground"
+                      }
+                    >
+                      One special character
+                    </li>
+                  </ul>
+                </div>
               </div>
 
               {error && <p className="text-sm text-destructive">{error}</p>}
