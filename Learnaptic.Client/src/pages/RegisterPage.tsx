@@ -42,11 +42,11 @@ function RegisterPage() {
     }
 
     if (
-      password.length < 10 ||
-      !/[A-Z]/.test(password) ||
-      !/[a-z]/.test(password) ||
-      !/[0-9]/.test(password) ||
-      !/[^a-zA-Z0-9]/.test(password)
+      !hasMinimumLength ||
+      !hasUppercase ||
+      !hasLowercase ||
+      !hasNumber ||
+      !hasSpecialCharacter
     ) {
       setError("Password does not meet requirements");
       return false;
