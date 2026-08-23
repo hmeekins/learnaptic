@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate, RouterProvider } from "react-router";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import PublicOnlyRoute from "@/components/auth/PublicOnlyRoute";
+import AppLayout from "@/components/layout/AppLayout";
 import * as pages from "@/pages";
 
 const router = createBrowserRouter([
@@ -25,16 +26,21 @@ const router = createBrowserRouter([
     Component: ProtectedRoute,
     children: [
       {
-        path: "/study-guides",
-        Component: pages.StudyGuideListPage,
-      },
-      {
-        path: "/study-guides/new",
-        Component: pages.CreateStudyGuidePage,
-      },
-      {
-        path: "/study-guides/:id/:slug",
-        Component: pages.StudyGuidePage,
+        Component: AppLayout,
+        children: [
+          {
+            path: "/study-guides",
+            Component: pages.StudyGuideListPage,
+          },
+          {
+            path: "/study-guides/new",
+            Component: pages.CreateStudyGuidePage,
+          },
+          {
+            path: "/study-guides/:id/:slug",
+            Component: pages.StudyGuidePage,
+          },
+        ],
       },
     ],
   },
