@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/config/api";
 import createSlug from "../utils/createSlug";
-import NavBar from "../components/layout/NavBar";
 import StudyGuideCard from "../components/notebooks/StudyGuideCard";
 
 type StudyGuideListItem = {
@@ -43,7 +42,6 @@ function StudyGuideListPage() {
 
   return (
     <>
-      <NavBar />
       <main>
         <h1>Study Guides</h1>
         <p>Your study materials, all in one place.</p>

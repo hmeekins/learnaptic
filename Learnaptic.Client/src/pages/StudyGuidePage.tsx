@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { API_URL } from "@/config/api";
-import NavBar from "../components/layout/NavBar";
 import ConceptTableOfContents from "../components/notebooks/ConceptTableOfContents";
 import ConceptCard from "../components/notebooks/ConceptCard";
 import type { StudyGuideDetail } from "../types/StudyGuides/StudyGuideDetail";
@@ -22,7 +21,6 @@ function StudyGuidePage() {
   if (studyGuide === null) {
     return (
       <>
-        <NavBar />
         <main>
           <p>Loading study guide...</p>
         </main>
@@ -31,7 +29,6 @@ function StudyGuidePage() {
   }
   return (
     <>
-      <NavBar />
       <main>
         <header>
           <h1>{studyGuide?.title || ""}</h1>
