@@ -29,15 +29,15 @@ const router = createBrowserRouter([
         Component: AppLayout,
         children: [
           {
-            path: "/study-guides",
+            path: "/notebooks",
             Component: pages.StudyGuideListPage,
           },
           {
-            path: "/study-guides/new",
+            path: "/notebooks/new",
             Component: pages.CreateStudyGuidePage,
           },
           {
-            path: "/study-guides/:id/:slug",
+            path: "/notebooks/:id/:slug",
             Component: pages.StudyGuidePage,
           },
         ],

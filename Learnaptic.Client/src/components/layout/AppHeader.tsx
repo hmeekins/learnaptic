@@ -6,8 +6,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/AuthContext";
-import { Link } from "react-router";
-import learnapticLogo from "@/assets/branding/learnaptic-logo.svg";
+import { NavLink } from "react-router";
+import fullLogo from "@/assets/branding/learnaptic-logo.svg";
+import iconLogo from "@/assets/branding/learnaptic-logo-small.svg";
 
 function AppHeader() {
   const { user, logout } = useAuth();
@@ -15,11 +16,41 @@ function AppHeader() {
   return (
     <header className="flex items-center justify-between border-b px-4 py-4">
       <div className="flex items-center gap-6">
-        <Link to="/study-guides">
-          <img src={learnapticLogo} alt="" className="h-12 w-auto" />
-        </Link>
-        <Link to="/notebooks">Notebooks</Link>
-        <Link to="/study-sets">Study Sets</Link>
+        <NavLink to="/study-guides" className="flex items-center">
+          <img
+            src={fullLogo}
+            alt="Learnaptic"
+            className="hidden h-12 w-auto sm:block"
+          />
+
+          <img
+            src={iconLogo}
+            alt="Learnaptic"
+            className="h-12 w-auto sm:hidden"
+          />
+        </NavLink>
+
+        <NavLink
+          to="/notebooks"
+          className={({ isActive }) =>
+            isActive
+              ? "font-medium text-primary"
+              : "text-foreground hover:text-primary"
+          }
+        >
+          Notebooks
+        </NavLink>
+
+        <NavLink
+          to="/study-sets"
+          className={({ isActive }) =>
+            isActive
+              ? "font-medium text-primary"
+              : "text-foreground hover:text-primary"
+          }
+        >
+          Study Sets
+        </NavLink>
       </div>
 
       <DropdownMenu>

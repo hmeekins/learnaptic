@@ -9,7 +9,7 @@ function PublicOnlyRoute() {
   }
 
   if (user) {
-    return <Navigate to="/study-guides" replace />;
+    return <Navigate to="/notebooks" replace />;
   }
 
   return <Outlet />;
