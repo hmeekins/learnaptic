@@ -6,20 +6,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/AuthContext";
+import { Link } from "react-router";
+import learnapticLogo from "@/assets/branding/learnaptic-logo.svg";
 
 function AppHeader() {
   const { user, logout } = useAuth();
 
   return (
     <header className="flex items-center justify-between border-b px-6 py-4">
-      <span>Learnaptic</span>
+      <Link to="/study-guides" className="flex items-center gap-2">
+        <img src={learnapticLogo} alt="" className="h-9 w-auto" />
+
+        <span className="font-bold text-primary">Learnaptic</span>
+      </Link>
 
       <DropdownMenu>
         <DropdownMenuTrigger render={<Button variant="ghost" />}>
           {user?.userName}
         </DropdownMenuTrigger>
 
-        <DropdownMenuContent align="end">
+        <DropdownMenuContent>
           <DropdownMenuItem disabled>Account</DropdownMenuItem>
 
           <DropdownMenuItem onClick={logout}>Logout</DropdownMenuItem>
