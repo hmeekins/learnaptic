@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/config/api";
-import NavBar from "../components/layout/NavBar";
 import TextInput from "../components/TextInput";
 import type { CreateStudyGuideRequest } from "../types/StudyGuides/CreateStudyGuideRequest";
 import type { StudyGuideDetail } from "../types/StudyGuides/StudyGuideDetail";
@@ -42,7 +41,6 @@ function CreateStudyGuidePage() {
 
   return (
     <>
-      <NavBar />
       <main>
         <h1>Create Study Guide</h1>
         <p>Create a new study guide to organize your learning.</p>

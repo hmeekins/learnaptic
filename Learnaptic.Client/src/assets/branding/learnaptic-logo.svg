@@ -4,10 +4,10 @@
 <svg
    version="1.1"
    id="svg1"
-   width="500"
-   height="500"
-   viewBox="0 0 500 500"
-   sodipodi:docname="learnapticlogo.svg"
+   width="1500"
+   height="300"
+   viewBox="0 0 1500 300"
+   sodipodi:docname="learnaptic-logo.svg"
    inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
@@ -25,18 +25,19 @@
      inkscape:pagecheckerboard="true"
      inkscape:deskcolor="#d1d1d1"
      inkscape:zoom="1"
-     inkscape:cx="192.5"
+     inkscape:cx="713"
      inkscape:cy="273.5"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
      inkscape:window-y="292"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g1" />
+     inkscape:current-layer="layer1" />
   <g
      inkscape:groupmode="layer"
      inkscape:label="Image"
-     id="g1">
+     id="g1"
+     transform="translate(0,-99.509)">
     <path
        style="display:inline;fill:#0f766e;fill-opacity:1"
        d="M 67.598137,202.37421 246.0368,118.11151 426.95378,203.61337 249.1347,287.87607 Z"
@@ -58,5 +59,23 @@
        style="fill:#115e59;fill-opacity:1;stroke-width:1.00041"
        d="m 248.62722,296.90119 -0.95266,84.0053 131.22821,-61.58815 1.42898,-82.82545 z"
        id="path5" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Image 1"
+     transform="translate(-3,-93.90625)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:192px;font-family:Inter;-inkscape-font-specification:Inter;writing-mode:lr-tb;direction:ltr;white-space:pre;inline-size:1099.84;display:inline;fill:#0f766e;fill-opacity:1"
+       x="503"
+       y="266"
+       id="text1"
+       transform="translate(-66,48)"><tspan
+         x="503"
+         y="266"
+         id="tspan3"><tspan
+           style="font-weight:bold;-inkscape-font-specification:'Inter Bold'"
+           id="tspan2">Learnaptic</tspan></tspan></text>
   </g>
 </svg>
