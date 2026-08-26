@@ -1,9 +1,13 @@
 import { Outlet } from "react-router";
+import AppHeader from "@/components/layout/AppHeader";
 
 function AppLayout() {
   return (
     <div className="min-h-screen">
-      <Outlet />
+      <AppHeader />
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }
