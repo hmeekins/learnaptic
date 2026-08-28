@@ -1,9 +1,9 @@
 ﻿using Learnaptic.Api.Features.Concepts.Dtos;
 using Learnaptic.Api.Features.StudySets.Dtos;
 
-namespace Learnaptic.Api.Features.StudyGuides.Dtos
+namespace Learnaptic.Api.Features.Notebooks.Dtos
 {
-    public class GetStudyGuideDto
+    public class GetNotebookDto
     {
         public int Id { get; set; }
 

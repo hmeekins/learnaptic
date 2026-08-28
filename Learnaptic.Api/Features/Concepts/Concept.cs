@@ -1,12 +1,14 @@
-﻿namespace Learnaptic.Api.Features.Concepts
+﻿using Learnaptic.Api.Features.Notebooks;
+
+namespace Learnaptic.Api.Features.Concepts
 {
     public class Concept
     {
         public int Id { get; set; }
 
-        public int StudyGuideId { get; set; }
+        public int NotebookId { get; set; }
 
-        public StudyGuide StudyGuide { get; set; } = null!;
+        public Notebook Notebook { get; set; } = null!;
 
         public string Title { get; set; } = string.Empty;
 

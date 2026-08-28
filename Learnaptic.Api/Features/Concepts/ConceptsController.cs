@@ -9,7 +9,7 @@ namespace Learnaptic.Api.Features.Concepts
 {
     [Authorize]
     [ApiController]
-    [Route("api/study-guides/{studyGuideId}/concepts")]
+    [Route("api/study-guides/{notebookId}/concepts")]
     public class ConceptsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -20,17 +20,17 @@ namespace Learnaptic.Api.Features.Concepts
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateConcept(int studyGuideId, CreateConceptDto createConceptDto)
+        public async Task<IActionResult> CreateConcept(int notebookId, CreateConceptDto createConceptDto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var studyGuide = await _context.StudyGuides.FirstOrDefaultAsync(sg => sg.Id == studyGuideId && sg.UserId == userId);
+            var notebook = await _context.Notebooks.FirstOrDefaultAsync(nb => nb.Id == notebookId && nb.UserId == userId);
 
-            if (studyGuide == null)
+            if (notebook == null)
                 return NotFound();
 
             var nextPosition = await _context.Concepts
-                .Where(c => c.StudyGuideId == studyGuideId)
+                .Where(c => c.NotebookId == notebookId)
                 .MaxAsync(c => (int?)c.Position) ?? -1;
 
             var concept = new Concept
@@ -38,15 +38,15 @@ namespace Learnaptic.Api.Features.Concepts
                 Title = createConceptDto.Title,
                 Content = createConceptDto.Content,
                 Position = nextPosition + 1,
-                StudyGuideId = studyGuideId
+                NotebookId = notebookId
             };
 
             _context.Concepts.Add(concept);
 
             var now = DateTime.UtcNow;
 
-            studyGuide.UpdatedAt = now;
-            studyGuide.LastAccessedAt = now;
+            notebook.UpdatedAt = now;
+            notebook.LastAccessedAt = now;
 
             await _context.SaveChangesAsync();
 
@@ -61,15 +61,15 @@ namespace Learnaptic.Api.Features.Concepts
         }
 
         [HttpPut("{conceptId}")]
-        public async Task<IActionResult> UpdateConcept(int conceptId, int studyGuideId, UpdateConceptDto updateConceptDto)
+        public async Task<IActionResult> UpdateConcept(int conceptId, int notebookId, UpdateConceptDto updateConceptDto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var concept = await _context.Concepts
-                .Include(c => c.StudyGuide)
+                .Include(c => c.Notebook)
                 .FirstOrDefaultAsync(c =>
                 c.Id == conceptId &&
-                c.StudyGuideId == studyGuideId
-                && c.StudyGuide.UserId == userId);
+                c.NotebookId == notebookId
+                && c.Notebook.UserId == userId);
 
             if (concept == null)
                 return NotFound();
@@ -79,8 +79,8 @@ namespace Learnaptic.Api.Features.Concepts
 
             var now = DateTime.UtcNow;
 
-            concept.StudyGuide.UpdatedAt = now;
-            concept.StudyGuide.LastAccessedAt = now;
+            concept.Notebook.UpdatedAt = now;
+            concept.Notebook.LastAccessedAt = now;
 
             await _context.SaveChangesAsync();
 
@@ -88,20 +88,20 @@ namespace Learnaptic.Api.Features.Concepts
         }
 
         [HttpPut("reorder")]
-        public async Task<IActionResult> ReorderConcepts(int studyGuideId, List<int> conceptIds)
+        public async Task<IActionResult> ReorderConcepts(int notebookId, List<int> conceptIds)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            var studyGuide = await _context.StudyGuides.FirstOrDefaultAsync(sg => sg.Id == studyGuideId && sg.UserId == userId);
+            var notebook = await _context.Notebooks.FirstOrDefaultAsync(nb => nb.Id == notebookId && nb.UserId == userId);
 
-            if (studyGuide == null)
+            if (notebook == null)
                 return NotFound();
 
             if (conceptIds.Count != conceptIds.Distinct().Count())
                 return BadRequest("Duplicate concept IDs are not allowed.");
 
             var concepts = await _context.Concepts
-                .Where(c => c.StudyGuideId == studyGuideId)
+                .Where(c => c.NotebookId == notebookId)
                 .ToListAsync();
 
             if (concepts.Count != conceptIds.Count)
@@ -123,8 +123,8 @@ namespace Learnaptic.Api.Features.Concepts
             }
 
             var now = DateTime.UtcNow;
-            studyGuide.UpdatedAt = now;
-            studyGuide.LastAccessedAt = now;
+            notebook.UpdatedAt = now;
+            notebook.LastAccessedAt = now;
 
             await _context.SaveChangesAsync();
 
@@ -132,17 +132,17 @@ namespace Learnaptic.Api.Features.Concepts
         }
 
         [HttpDelete("{conceptId}")]
-        public async Task<IActionResult> DeleteConcept(int conceptId, int studyGuideId)
+        public async Task<IActionResult> DeleteConcept(int conceptId, int notebookId)
         {
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             var concept = await _context.Concepts
-                .Include(c => c.StudyGuide)
+                .Include(c => c.Notebook)
                 .FirstOrDefaultAsync(c =>
                     c.Id == conceptId &&
-                    c.StudyGuideId == studyGuideId &&
-                    c.StudyGuide.UserId == userId);
+                    c.NotebookId == notebookId &&
+                    c.Notebook.UserId == userId);
 
             if (concept == null)
             {
@@ -153,8 +153,8 @@ namespace Learnaptic.Api.Features.Concepts
 
             var now = DateTime.UtcNow;
 
-            concept.StudyGuide.UpdatedAt = now;
-            concept.StudyGuide.LastAccessedAt = now;
+            concept.Notebook.UpdatedAt = now;
+            concept.Notebook.LastAccessedAt = now;
 
             await _context.SaveChangesAsync();
 

@@ -1,5 +1,5 @@
 ﻿using Learnaptic.Api.Features.Flashcards.Dtos;
-using Learnaptic.Api.Features.StudyGuides.Dtos;
+using Learnaptic.Api.Features.Notebooks.Dtos;
 
 namespace Learnaptic.Api.Features.StudySets.Dtos
 {
@@ -13,7 +13,7 @@ namespace Learnaptic.Api.Features.StudySets.Dtos
 
         public DateTime UpdatedAt { get; set; }
 
-        public List<GetStudyGuideSummaryDto> StudyGuides { get; set; } = new();
+        public List<GetNotebookSummaryDto> Notebooks { get; set; } = new();
 
         public List<GetFlashcardDto> Flashcards { get; set; } = new();
     }

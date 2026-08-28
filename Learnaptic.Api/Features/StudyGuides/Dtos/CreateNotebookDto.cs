@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Learnaptic.Api.Features.StudyGuides.Dtos
+namespace Learnaptic.Api.Features.Notebooks.Dtos
 {
-    public class CreateStudyGuideDto
+    public class CreateNotebookDto
     {
         [Required]
         [StringLength(100, MinimumLength = 3)]

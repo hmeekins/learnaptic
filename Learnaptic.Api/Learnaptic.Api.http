@@ -1,5 +1,5 @@
 @Learnaptic.Api_HostAddress = http://localhost:5075
-@studyGuideId = 1
+@notebookId = 1
 @studySetId = 1
 @conceptId = 1
 
@@ -13,7 +13,7 @@ Accept: application/json
 
 
 ### Get a specific Study Guide by ID
-GET {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
+GET {{Learnaptic.Api_HostAddress}}/api/study-guides/{{notebookId}}
 Accept: application/json
 
 
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 
 ### Update an existing Study Guide
-PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
+PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{notebookId}}
 Content-Type: application/json
 {
   "title": "Updated Biology Exam Review"
@@ -35,7 +35,7 @@ Content-Type: application/json
 
 
 ### Delete a Study Guide
-DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
+DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{notebookId}}
 
 
 ###############################################
@@ -44,7 +44,7 @@ DELETE {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}
 
 
 ### Create a new Concept for a Study Guide
-POST {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts
+POST {{Learnaptic.Api_HostAddress}}/api/study-guides/{{notebookId}}/concepts
 Content-Type: application/json
 {
   "title": "Cell Division",
@@ -53,7 +53,7 @@ Content-Type: application/json
 
 
 ### Update an existing Concept for a Study Guide
-PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/{{conceptId}}
+PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{notebookId}}/concepts/{{conceptId}}
 Content-Type: application/json
 {
   "title": "Updated Cell Division",
@@ -62,7 +62,7 @@ Content-Type: application/json
 
 
 ### Reorder concepts in Study Guide
-PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{studyGuideId}}/concepts/reorder
+PUT {{Learnaptic.Api_HostAddress}}/api/study-guides/{{notebookId}}/concepts/reorder
 Content-Type: application/json
 [4,6,7,3]
 
@@ -86,7 +86,7 @@ Content-Type: application/json
 
 {
   "title": "Biology Study Set",
-  "studyGuideIds": [],
+  "notebookIds": [],
   "flashcards": [
     {
       "question": "What is mitosis?",
@@ -110,7 +110,7 @@ Content-Type: application/json
 
 {
   "title": "Updated Biology Study Set",
-  "studyGuideIds": [],
+  "notebookIds": [],
   "flashcards": [
     {
       "id": 2,

@@ -13,6 +13,6 @@ namespace Learnaptic.Api.Features.StudySets.Dtos
         [MinLength(2)]
         public List<CreateFlashcardDto> Flashcards { get; set; } = new();
 
-        public List<int> StudyGuideIds { get; set; } = new();
+        public List<int> NotebookIds { get; set; } = new();
     }
 }

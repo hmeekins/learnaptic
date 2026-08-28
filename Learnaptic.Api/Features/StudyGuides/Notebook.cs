@@ -1,14 +1,16 @@
 ﻿using Learnaptic.Api.Features.Auth;
-using Learnaptic.Api.Features.Flashcards;
-using Learnaptic.Api.Features.Notebooks;
+using Learnaptic.Api.Features.Concepts;
+using Learnaptic.Api.Features.StudySets;
 
-namespace Learnaptic.Api.Features.StudySets
+namespace Learnaptic.Api.Features.Notebooks
 {
-    public class StudySet
+    public class Notebook
     {
         public int Id { get; set; }
 
         public string Title { get; set; } = string.Empty;
+
+        public string? Subject { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -20,8 +22,8 @@ namespace Learnaptic.Api.Features.StudySets
 
         public ApplicationUser User { get; set; } = null!;
 
-        public List<Notebook> Notebooks { get; set; } = new();
+        public List<Concept> Concepts { get; set; } = new();
 
-        public List<Flashcard> Flashcards { get; set; } = new();
+        public List<StudySet> StudySets { get; set; } = new();
     }
 }

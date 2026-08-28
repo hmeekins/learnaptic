@@ -4,6 +4,7 @@ using Learnaptic.Api.Features.Flashcards;
 using Learnaptic.Api.Features.StudySets;
 using Learnaptic.Api.Features.Auth;
 using Learnaptic.Api.Features.Concepts;
+using Learnaptic.Api.Features.Notebooks;
 
 namespace Learnaptic.Api.Data
 {
@@ -13,7 +14,7 @@ namespace Learnaptic.Api.Data
         {
         }
 
-        public DbSet<StudyGuide> StudyGuides { get; set; }
+        public DbSet<Notebook> Notebooks { get; set; }
         public DbSet<Flashcard> Flashcards { get; set; }
         public DbSet<Concept> Concepts { get; set; }
         public DbSet<StudySet> StudySets { get; set; }

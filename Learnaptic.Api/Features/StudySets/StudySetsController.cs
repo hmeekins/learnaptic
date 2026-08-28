@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Learnaptic.Api.Features.StudySets.Dtos;
 using Learnaptic.Api.Features.Flashcards.Dtos;
-using Learnaptic.Api.Features.StudyGuides.Dtos;
+using Learnaptic.Api.Features.Notebooks.Dtos;
 using Learnaptic.Api.Features.Flashcards;
 
 namespace Learnaptic.Api.Features.StudySets
@@ -47,7 +47,7 @@ namespace Learnaptic.Api.Features.StudySets
 
             var studySet = await _context.StudySets
                 .Include(ss => ss.Flashcards)
-                .Include(ss => ss.StudyGuides)
+                .Include(ss => ss.Notebooks)
                 .FirstOrDefaultAsync(ss => ss.Id == id && ss.UserId == userId);
 
             if (studySet == null)
@@ -62,10 +62,10 @@ namespace Learnaptic.Api.Features.StudySets
                 CreatedAt = studySet.CreatedAt,
                 UpdatedAt = studySet.UpdatedAt,
 
-                StudyGuides = studySet.StudyGuides.Select(sg => new GetStudyGuideSummaryDto
+                Notebooks = studySet.Notebooks.Select(nb => new GetNotebookSummaryDto
                 {
-                    Id = sg.Id,
-                    Title = sg.Title
+                    Id = nb.Id,
+                    Title = nb.Title
                 }).ToList(),
 
                 Flashcards = studySet.Flashcards
@@ -92,17 +92,17 @@ namespace Learnaptic.Api.Features.StudySets
             if (userId == null)
                 return Unauthorized();
 
-            var requestedStudyGuideIds = createStudySetDto.StudyGuideIds
+            var requestedNotebookIds = createStudySetDto.NotebookIds
                 .Distinct()
                 .ToList();
 
-            var linkedStudyGuides = await _context.StudyGuides
-                .Where(sg => requestedStudyGuideIds.Contains(sg.Id) && sg.UserId == userId)
+            var linkedNotebooks = await _context.Notebooks
+                .Where(nb => requestedNotebookIds.Contains(nb.Id) && nb.UserId == userId)
                 .ToListAsync();
 
-            if (linkedStudyGuides.Count != requestedStudyGuideIds.Count)
+            if (linkedNotebooks.Count != requestedNotebookIds.Count)
             {
-                return BadRequest("One or more selected study guides do not exist.");
+                return BadRequest("One or more selected notebooks do not exist.");
             }
 
             DateTime now = DateTime.UtcNow;
@@ -114,7 +114,7 @@ namespace Learnaptic.Api.Features.StudySets
                 UpdatedAt = now,
                 LastAccessedAt = now,
                 UserId = userId,
-                StudyGuides = linkedStudyGuides,
+                Notebooks = linkedNotebooks,
 
                 Flashcards = createStudySetDto.Flashcards
                     .Select((fc, index) => new Flashcard
@@ -136,10 +136,10 @@ namespace Learnaptic.Api.Features.StudySets
                 CreatedAt = studySet.CreatedAt,
                 UpdatedAt = studySet.UpdatedAt,
 
-                StudyGuides = studySet.StudyGuides.Select(sg => new GetStudyGuideSummaryDto
+                Notebooks = studySet.Notebooks.Select(nb => new GetNotebookSummaryDto
                 {
-                    Id = sg.Id,
-                    Title = sg.Title
+                    Id = nb.Id,
+                    Title = nb.Title
                 }).ToList(),
 
                 Flashcards = studySet.Flashcards
@@ -162,7 +162,7 @@ namespace Learnaptic.Api.Features.StudySets
 
             var studySet = await _context.StudySets
                 .Include(ss => ss.Flashcards)
-                .Include(ss => ss.StudyGuides)
+                .Include(ss => ss.Notebooks)
                 .FirstOrDefaultAsync(ss =>
                     ss.Id == id &&
                     ss.UserId == userId);
@@ -170,20 +170,20 @@ namespace Learnaptic.Api.Features.StudySets
             if (studySet == null)
                 return NotFound();
 
-            var requestedStudyGuideIds = updateStudySetDto.StudyGuideIds
+            var requestedNotebookIds = updateStudySetDto.NotebookIds
                 .Distinct()
                 .ToList();
 
-            var linkedStudyGuides = await _context.StudyGuides
-                .Where(sg =>
-                    requestedStudyGuideIds.Contains(sg.Id) &&
-                    sg.UserId == userId)
+            var linkedNotebooks = await _context.Notebooks
+                .Where(nb =>
+                    requestedNotebookIds.Contains(nb.Id) &&
+                    nb.UserId == userId)
                 .ToListAsync();
 
-            if (linkedStudyGuides.Count != requestedStudyGuideIds.Count)
+            if (linkedNotebooks.Count != requestedNotebookIds.Count)
             {
                 return BadRequest(
-                    "One or more selected study guides do not exist.");
+                    "One or more selected notebooks do not exist.");
             }
 
             if (!AreFlashcardsValid(
@@ -199,11 +199,11 @@ namespace Learnaptic.Api.Features.StudySets
             studySet.UpdatedAt = now;
             studySet.LastAccessedAt = now;
 
-            studySet.StudyGuides.Clear();
+            studySet.Notebooks.Clear();
 
-            foreach (var studyGuide in linkedStudyGuides)
+            foreach (var notebook in linkedNotebooks)
             {
-                studySet.StudyGuides.Add(studyGuide);
+                studySet.Notebooks.Add(notebook);
             }
 
             SyncFlashcards(

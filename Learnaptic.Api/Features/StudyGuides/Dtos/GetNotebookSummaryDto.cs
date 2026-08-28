@@ -1,6 +1,6 @@
-﻿namespace Learnaptic.Api.Features.StudyGuides.Dtos
+﻿namespace Learnaptic.Api.Features.Notebooks.Dtos
 {
-    public class GetStudyGuideSummaryDto
+    public class GetNotebookSummaryDto
     {
         public int Id { get; set; }
 
