@@ -1,4 +1,4 @@
-const notebookColors = {
+export const notebookColors = {
   yellow: {
     base: "#facc15",
     dark: "#ca8a04",
@@ -6,6 +6,10 @@ const notebookColors = {
   red: {
     base: "#ef4444",
     dark: "#b91c1c",
+  },
+  orange: {
+    base: "#f97316",
+    dark: "#c2410c",
   },
   green: {
     base: "#22c55e",
@@ -28,3 +32,5 @@ const notebookColors = {
     dark: "#0f766e",
   },
 } as const;
+
+export type NotebookColor = keyof typeof notebookColors;
