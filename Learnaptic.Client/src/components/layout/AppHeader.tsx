@@ -21,7 +21,7 @@ function AppHeader() {
             <img
               src={fullLogo}
               alt="Learnaptic"
-              className="hidden h-12 w-auto sm:block"
+              className="hidden h-11 w-auto sm:block"
             />
 
             <img
