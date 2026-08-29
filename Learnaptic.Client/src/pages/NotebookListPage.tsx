@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/config/api";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import createSlug from "@/utils/createSlug";
 import NotebookCard from "@/components/notebooks/NotebookCard";
 
@@ -17,6 +18,7 @@ type NotebookListItem = {
 function NotebookListPage() {
   const navigate = useNavigate();
   const [notebooks, setNotebooks] = useState<NotebookListItem[]>([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     async function loadNotebooks() {
@@ -50,11 +52,19 @@ function NotebookListPage() {
     );
   }
 
+  const searchTerm = search.toLowerCase();
+  const filteredNotebooks = notebooks.filter((notebook) => {
+    return (
+      notebook.title.toLowerCase().includes(searchTerm) ||
+      notebook.subject?.toLowerCase().includes(searchTerm)
+    );
+  });
+
   return (
     <>
       <main className="mx-auto max-w-6xl px-6 py-8">
-        <div className="flex mx auto justify-between items-center">
-          <div className="block py-8">
+        <div className="flex justify-between items-center">
+          <div>
             <h1 className="font-bold">Notebooks</h1>
             <p className="text-sm text-muted-foreground">
               Your study materials, all in one place.
@@ -64,8 +74,16 @@ function NotebookListPage() {
             Create Notebook
           </Button>
         </div>
+        <Input
+          className="my-4 w-full max-w-lg"
+          id="title"
+          type="text"
+          placeholder="Search"
+          value={search}
+          onChange={(s) => setSearch(s.target.value)}
+        />
         <div className="grid gap-4 md:grid-cols-2">
-          {notebooks.map((notebook) => (
+          {filteredNotebooks.map((notebook) => (
             <NotebookCard
               key={notebook.id}
               id={notebook.id}
