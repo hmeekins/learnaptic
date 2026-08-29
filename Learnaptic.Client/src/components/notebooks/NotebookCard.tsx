@@ -16,16 +16,25 @@ function NotebookCard(props: NotebookCardProps) {
   const dateString = formatTimeElapsed(props.lastAccessedAt);
 
   return (
-    <div onClick={props.onClick}>
-      <div className="h-16 w-14">
+    <div
+      onClick={props.onClick}
+      className="flex cursor-pointer items-center gap-4 rounded-xl border bg-card p-4 transition-colors hover:bg-muted/50"
+    >
+      <div className="h-16 w-14 shrink-0">
         <NotebookIcon color={props.color} />
       </div>
 
-      <h2>{props.title}</h2>
+      <div className="min-w-0 flex-1">
+        <h2 className="truncate font-semibold">{props.title}</h2>
 
-      {props.subject && <p>{props.subject}</p>}
+        {props.subject && (
+          <p className="text-sm text-muted-foreground">{props.subject}</p>
+        )}
 
-      <p>Last Accessed: {dateString}</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Last accessed {dateString}
+        </p>
+      </div>
 
       <button
         onClick={(event) => {
