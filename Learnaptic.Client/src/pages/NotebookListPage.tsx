@@ -2,6 +2,7 @@ import { type NotebookColor } from "@/constants/notebookColors";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/config/api";
+import { Button } from "@/components/ui/button";
 import createSlug from "@/utils/createSlug";
 import NotebookCard from "@/components/notebooks/NotebookCard";
 
@@ -51,28 +52,36 @@ function NotebookListPage() {
 
   return (
     <>
-      <main>
-        <h1>Notebooks</h1>
-        <p>Your study materials, all in one place.</p>
-        {notebooks.map((notebook) => (
-          <NotebookCard
-            key={notebook.id}
-            id={notebook.id}
-            title={notebook.title}
-            subject={notebook.subject}
-            color={notebook.color}
-            lastAccessedAt={notebook.lastAccessedAt}
-            onDelete={() => handleDeleteNotebook(notebook.id)}
-            onClick={() =>
-              navigate(
-                `/notebooks/${notebook.id}/${createSlug(notebook.title)}`
-              )
-            }
-          />
-        ))}
-        <button onClick={() => navigate("/notebooks/new")}>
-          Create New Notebook
-        </button>
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        <div className="flex mx auto justify-between items-center">
+          <div className="block py-8">
+            <h1 className="font-bold">Notebooks</h1>
+            <p className="text-sm text-muted-foreground">
+              Your study materials, all in one place.
+            </p>
+          </div>
+          <Button variant="default" onClick={() => navigate("/notebooks/new")}>
+            Create Notebook
+          </Button>
+        </div>
+        <div className="grid gap-4 md:grid-cols-2">
+          {notebooks.map((notebook) => (
+            <NotebookCard
+              key={notebook.id}
+              id={notebook.id}
+              title={notebook.title}
+              subject={notebook.subject}
+              color={notebook.color}
+              lastAccessedAt={notebook.lastAccessedAt}
+              onDelete={() => handleDeleteNotebook(notebook.id)}
+              onClick={() =>
+                navigate(
+                  `/notebooks/${notebook.id}/${createSlug(notebook.title)}`
+                )
+              }
+            />
+          ))}
+        </div>
       </main>
     </>
   );

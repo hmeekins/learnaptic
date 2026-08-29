@@ -21,9 +21,9 @@ Accept: application/json
 POST {{Learnaptic.Api_HostAddress}}/api/notebooks
 Content-Type: application/json
 {
-  "title": "Biology Exam Review",
-  "subject": "Biology",
-  "color": "teal",
+  "title": "Calc 1",
+  "subject": "Math",
+  "color": "yellow"
 }
 
 
