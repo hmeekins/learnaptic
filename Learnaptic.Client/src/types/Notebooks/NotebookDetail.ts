@@ -1,7 +1,7 @@
 import type { Concept } from "../Concepts/Concept";
 import type { StudySetSummary } from "../StudySets/StudySetSummary";
 
-export interface StudyGuideDetail {
+export interface NotebookDetail {
   id: number;
   title: string;
   subject: string | null;

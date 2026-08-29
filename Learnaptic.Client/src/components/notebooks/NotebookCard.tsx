@@ -1,6 +1,6 @@
 import formatTimeElapsed from "@/utils/formatDate";
 
-type StudyGuideCardProps = {
+type NotebookCardProps = {
   id: number;
   title: string;
   subject?: string;
@@ -9,7 +9,7 @@ type StudyGuideCardProps = {
   onClick: () => void;
 };
 
-function StudyGuideCard(props: StudyGuideCardProps) {
+function NotebookCard(props: NotebookCardProps) {
   const dateString = formatTimeElapsed(props.lastAccessedAt);
 
   return (
@@ -29,4 +29,4 @@ function StudyGuideCard(props: StudyGuideCardProps) {
   );
 }
 
-export default StudyGuideCard;
+export default NotebookCard;

@@ -30,15 +30,15 @@ const router = createBrowserRouter([
         children: [
           {
             path: "/notebooks",
-            Component: pages.StudyGuideListPage,
+            Component: pages.NotebookListPage,
           },
           {
             path: "/notebooks/new",
-            Component: pages.CreateStudyGuidePage,
+            Component: pages.CreateNotebookPage,
           },
           {
             path: "/notebooks/:id/:slug",
-            Component: pages.StudyGuidePage,
+            Component: pages.NotebookPage,
           },
         ],
       },

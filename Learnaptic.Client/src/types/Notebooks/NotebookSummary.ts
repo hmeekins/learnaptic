@@ -1,4 +1,4 @@
-export interface StudyGuideSummary {
+export interface NotebookSummary {
   id: number;
   title: string;
   subject: string | null;

@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { API_URL } from "@/config/api";
 import TextInput from "../components/TextInput";
-import type { CreateStudyGuideRequest } from "../types/StudyGuides/CreateStudyGuideRequest";
-import type { StudyGuideDetail } from "../types/StudyGuides/StudyGuideDetail";
+import type { CreateNotebookRequest } from "../types/Notebooks/CreateNotebookRequest";
+import type { NotebookDetail } from "../types/Notebooks/NotebookDetail";
 
-function CreateStudyGuidePage() {
+function CreateNotebookPage() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
 
@@ -17,33 +17,33 @@ function CreateStudyGuidePage() {
       return;
     }
 
-    const studyGuideRequest: CreateStudyGuideRequest = {
+    const notebookRequest: CreateNotebookRequest = {
       title: title.trim(),
     };
     if (subject.trim() !== "") {
-      studyGuideRequest.subject = subject.trim();
+      notebookRequest.subject = subject.trim();
     }
-    const response = await fetch(`${API_URL}/api/study-guides`, {
+    const response = await fetch(`${API_URL}/api/notebooks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(studyGuideRequest),
+      body: JSON.stringify(notebookRequest),
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to create study guide: ${response.status}`);
+      throw new Error(`Failed to create notebook: ${response.status}`);
     }
 
-    const responseData: StudyGuideDetail = await response.json();
-    navigate(`/study-guides/${responseData.id}/${responseData.title}`);
+    const responseData: NotebookDetail = await response.json();
+    navigate(`/notebooks/${responseData.id}/${responseData.title}`);
   }
 
   return (
     <>
       <main>
-        <h1>Create Study Guide</h1>
-        <p>Create a new study guide to organize your learning.</p>
+        <h1>Create Notebook</h1>
+        <p>Create a new notebook to organize your learning.</p>
 
         <form onSubmit={handleSubmit}>
           <TextInput
@@ -60,11 +60,11 @@ function CreateStudyGuidePage() {
             onChange={setSubject}
           />
 
-          <button type="submit">Create Study Guide</button>
+          <button type="submit">Create Notebook</button>
         </form>
       </main>
     </>
   );
 }
 
-export default CreateStudyGuidePage;
+export default CreateNotebookPage;
