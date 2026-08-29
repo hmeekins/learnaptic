@@ -1,4 +1,23 @@
 import { type NotebookColor } from "@/constants/notebookColors";
+import { useState } from "react";
+import { EllipsisVertical } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogAction,
+  AlertDialogFooter,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import NotebookIcon from "./NotebookIcon";
 import formatTimeElapsed from "@/utils/formatDate";
 
@@ -14,6 +33,7 @@ interface NotebookCardProps {
 
 function NotebookCard(props: NotebookCardProps) {
   const dateString = formatTimeElapsed(props.lastAccessedAt);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   return (
     <div
@@ -36,14 +56,64 @@ function NotebookCard(props: NotebookCardProps) {
         </p>
       </div>
 
-      <button
-        onClick={(event) => {
-          event.stopPropagation();
-          props.onDelete();
-        }}
-      >
-        Delete
-      </button>
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            />
+          }
+        >
+          <EllipsisVertical />
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={(event) => {
+              setDeleteDialogOpen(true);
+              event.stopPropagation();
+            }}
+          >
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete notebook?</AlertDialogTitle>
+
+            <AlertDialogDescription>
+              Are you sure you want to delete your {props.title} notebook? This
+              action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={(event) => {
+                event.stopPropagation();
+              }}
+            >
+              Cancel
+            </AlertDialogCancel>
+
+            <AlertDialogAction
+              onClick={(event) => {
+                event.stopPropagation();
+                props.onDelete;
+              }}
+            >
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
