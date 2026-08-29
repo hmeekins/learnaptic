@@ -73,6 +73,7 @@ function NotebookCard(props: NotebookCardProps) {
 
         <DropdownMenuContent align="end">
           <DropdownMenuItem
+            variant="destructive"
             onClick={(event) => {
               setDeleteDialogOpen(true);
               event.stopPropagation();
@@ -106,7 +107,7 @@ function NotebookCard(props: NotebookCardProps) {
             <AlertDialogAction
               onClick={(event) => {
                 event.stopPropagation();
-                props.onDelete;
+                props.onDelete();
               }}
             >
               Delete
