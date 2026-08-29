@@ -19,6 +19,7 @@ function CreateNotebookPage() {
 
     const notebookRequest: CreateNotebookRequest = {
       title: title.trim(),
+      color: "teal",
     };
     if (subject.trim() !== "") {
       notebookRequest.subject = subject.trim();

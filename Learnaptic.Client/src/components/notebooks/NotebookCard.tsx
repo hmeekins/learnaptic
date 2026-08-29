@@ -1,13 +1,15 @@
 import formatTimeElapsed from "@/utils/formatDate";
+import { type NotebookColor } from "@/constants/notebookColors";
 
-type NotebookCardProps = {
+interface NotebookCardProps {
   id: number;
   title: string;
   subject?: string;
+  color: NotebookColor;
   lastAccessedAt: string;
   onDelete: () => void;
   onClick: () => void;
-};
+}
 
 function NotebookCard(props: NotebookCardProps) {
   const dateString = formatTimeElapsed(props.lastAccessedAt);

@@ -5,6 +5,7 @@ export interface NotebookDetail {
   id: number;
   title: string;
   subject: string | null;
+  color: string;
   studySets: StudySetSummary[];
   concepts: Concept[];
   updatedAt: string;

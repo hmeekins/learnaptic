@@ -1,10 +1,10 @@
+import type { NotebookDetail } from "@/types/Notebooks/NotebookDetail";
+import type { Concept } from "@/types/Concepts/Concept";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { API_URL } from "@/config/api";
 import ConceptTableOfContents from "@/components/notebooks/ConceptTableOfContents";
 import ConceptCard from "@/components/notebooks/ConceptCard";
-import type { NotebookDetail } from "@/types/Notebooks/NotebookDetail";
-import type { Concept } from "@/types/Concepts/Concept";
 
 function NotebookPage() {
   const { id } = useParams<{ id: string }>();
