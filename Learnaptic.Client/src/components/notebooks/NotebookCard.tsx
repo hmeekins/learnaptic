@@ -1,5 +1,6 @@
-import formatTimeElapsed from "@/utils/formatDate";
 import { type NotebookColor } from "@/constants/notebookColors";
+import NotebookIcon from "./NotebookIcon";
+import formatTimeElapsed from "@/utils/formatDate";
 
 interface NotebookCardProps {
   id: number;
@@ -16,9 +17,16 @@ function NotebookCard(props: NotebookCardProps) {
 
   return (
     <div onClick={props.onClick}>
+      <div className="h-16 w-14">
+        <NotebookIcon color={props.color} />
+      </div>
+
       <h2>{props.title}</h2>
+
       {props.subject && <p>{props.subject}</p>}
+
       <p>Last Accessed: {dateString}</p>
+
       <button
         onClick={(event) => {
           event.stopPropagation();
