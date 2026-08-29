@@ -11,6 +11,8 @@ namespace Learnaptic.Api.Features.Notebooks.Dtos
 
         public string? Subject { get; set; }
 
+        public string Color {  get; set; } = string.Empty;
+
         public List<GetConceptDto> Concepts { get; set; } = new();
 
         public List<GetStudySetListDto> StudySets { get; set; } = new();

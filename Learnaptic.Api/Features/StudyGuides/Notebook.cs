@@ -12,6 +12,8 @@ namespace Learnaptic.Api.Features.Notebooks
 
         public string? Subject { get; set; }
 
+        public string Color { get; set; } = string.Empty;
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }

@@ -8,6 +8,8 @@
 
         public string? Subject { get; set; }
 
+        public string Color { get; set; } = string.Empty;
+
         public DateTime LastAccessedAt { get; set; }
     }
 }

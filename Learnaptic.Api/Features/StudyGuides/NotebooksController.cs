@@ -34,6 +34,7 @@ namespace Learnaptic.Api.Features.Notebooks
                     Id = nb.Id,
                     Title = nb.Title,
                     Subject = nb.Subject,
+                    Color = nb.Color,
                     LastAccessedAt = nb.LastAccessedAt
                 })
                 .ToListAsync();
@@ -59,6 +60,7 @@ namespace Learnaptic.Api.Features.Notebooks
                 Id = notebook.Id,
                 Title = notebook.Title,
                 Subject = notebook.Subject,
+                Color = notebook.Color,
 
                 Concepts = notebook.Concepts
                     .OrderBy(c => c.Position)
@@ -101,6 +103,7 @@ namespace Learnaptic.Api.Features.Notebooks
             {
                 Title = dto.Title,
                 Subject = dto.Subject,
+                Color = dto.Color,
                 CreatedAt = now,
                 UpdatedAt = now,
                 LastAccessedAt = now,
@@ -115,6 +118,7 @@ namespace Learnaptic.Api.Features.Notebooks
                 Id = notebook.Id,
                 Title = notebook.Title,
                 Subject = notebook.Subject,
+                Color = notebook.Color,
                 LastAccessedAt = notebook.LastAccessedAt
             };
 
@@ -136,6 +140,7 @@ namespace Learnaptic.Api.Features.Notebooks
 
             notebook.Title = dto.Title;
             notebook.Subject = dto.Subject;
+            notebook.Color = dto.Color;
 
             DateTime now = DateTime.UtcNow;
             notebook.UpdatedAt = now;

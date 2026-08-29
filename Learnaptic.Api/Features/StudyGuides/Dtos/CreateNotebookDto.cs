@@ -10,5 +10,7 @@ namespace Learnaptic.Api.Features.Notebooks.Dtos
 
         [StringLength(40, MinimumLength = 1)]
         public string? Subject { get; set; }
+
+        public string Color { get; set; } = string.Empty;
     }
 }
