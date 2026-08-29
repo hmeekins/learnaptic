@@ -45,7 +45,7 @@ function NotebookListPage() {
     }
 
     setNotebooks((previousNotebooks) =>
-      previousNotebooks.filter((guide) => guide.id !== idToDelete)
+      previousNotebooks.filter((notebook) => notebook.id !== idToDelete)
     );
   }
 
@@ -54,17 +54,19 @@ function NotebookListPage() {
       <main>
         <h1>Notebooks</h1>
         <p>Your study materials, all in one place.</p>
-        {notebooks.map((guide) => (
+        {notebooks.map((notebook) => (
           <NotebookCard
-            key={guide.id}
-            id={guide.id}
-            title={guide.title}
-            subject={guide.subject}
-            color={guide.color}
-            lastAccessedAt={guide.lastAccessedAt}
-            onDelete={() => handleDeleteNotebook(guide.id)}
+            key={notebook.id}
+            id={notebook.id}
+            title={notebook.title}
+            subject={notebook.subject}
+            color={notebook.color}
+            lastAccessedAt={notebook.lastAccessedAt}
+            onDelete={() => handleDeleteNotebook(notebook.id)}
             onClick={() =>
-              navigate(`/notebooks/${guide.id}/${createSlug(guide.title)}`)
+              navigate(
+                `/notebooks/${notebook.id}/${createSlug(notebook.title)}`
+              )
             }
           />
         ))}
