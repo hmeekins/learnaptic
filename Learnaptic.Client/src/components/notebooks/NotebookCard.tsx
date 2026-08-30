@@ -29,6 +29,7 @@ interface NotebookCardProps {
   lastAccessedAt: string;
   onDelete: () => void;
   onClick: () => void;
+  onEdit: () => void;
 }
 
 function NotebookCard(props: NotebookCardProps) {
@@ -72,6 +73,14 @@ function NotebookCard(props: NotebookCardProps) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
+          <DropdownMenuItem
+            onClick={(event) => {
+              event.stopPropagation();
+              props.onEdit();
+            }}
+          >
+            Edit
+          </DropdownMenuItem>
           <DropdownMenuItem
             variant="destructive"
             onClick={(event) => {

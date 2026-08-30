@@ -37,6 +37,10 @@ const router = createBrowserRouter([
             Component: pages.CreateNotebookPage,
           },
           {
+            path: "/notebooks/:id/:slug/edit",
+            Component: pages.EditNotebookPage,
+          },
+          {
             path: "/notebooks/:id/:slug",
             Component: pages.NotebookPage,
           },

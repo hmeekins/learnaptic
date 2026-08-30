@@ -97,6 +97,11 @@ function NotebookListPage() {
                   `/notebooks/${notebook.id}/${createSlug(notebook.title)}`
                 )
               }
+              onEdit={() =>
+                navigate(
+                  `/notebooks/${notebook.id}/${createSlug(notebook.title)}/edit`
+                )
+              }
             />
           ))}
         </div>
