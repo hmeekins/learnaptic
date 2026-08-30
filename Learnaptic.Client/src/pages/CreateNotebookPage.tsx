@@ -7,17 +7,30 @@ import { API_URL } from "@/config/api";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import NotebookIcon from "@/components/notebooks/NotebookIcon";
+import createSlug from "@/utils/createSlug";
 
 function CreateNotebookPage() {
   const [title, setTitle] = useState("");
   const [subject, setSubject] = useState("");
   const [color, setColor] = useState<NotebookColor>("teal");
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const navigate = useNavigate();
 
   async function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (title.trim() === "") {
+
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError("");
+
+    if (title.trim().length < 3) {
+      setError("Title must be at least 3 characters long");
+      setIsSubmitting(false);
       return;
     }
 
@@ -25,24 +38,36 @@ function CreateNotebookPage() {
       title: title.trim(),
       color: color,
     };
+
     if (subject.trim() !== "") {
       notebookRequest.subject = subject.trim();
     }
-    const response = await fetch(`${API_URL}/api/notebooks`, {
-      credentials: "include",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(notebookRequest),
-    });
 
-    if (!response.ok) {
-      throw new Error(`Failed to create notebook: ${response.status}`);
+    try {
+      const response = await fetch(`${API_URL}/api/notebooks`, {
+        credentials: "include",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(notebookRequest),
+      });
+
+      if (!response.ok) {
+        setError("Failed to create notebook");
+        return;
+      }
+
+      const responseData: NotebookDetail = await response.json();
+
+      navigate(
+        `/notebooks/${responseData.id}/${createSlug(responseData.title)}`
+      );
+    } catch {
+      setError("Unable to connect to the server");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    const responseData: NotebookDetail = await response.json();
-    navigate(`/notebooks/${responseData.id}/${responseData.title}`);
   }
 
   return (
@@ -98,7 +123,13 @@ function CreateNotebookPage() {
             </div>
 
             <div className="flex justify-center">
-              <Button type="submit">Create Notebook</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Creating..." : "Create Notebook"}
+              </Button>
+            </div>
+
+            <div className="flex justify-center">
+              {error && <p className="text-sm text-destructive">{error}</p>}
             </div>
           </form>
         </div>
