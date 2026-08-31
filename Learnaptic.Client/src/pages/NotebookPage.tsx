@@ -19,7 +19,37 @@ function NotebookPage() {
       setNotebook(data);
     }
     loadNotebook();
-  }, []);
+  }, [id]);
+
+  async function handleAddConcept() {
+    const response = await fetch(`${API_URL}/api/notebooks/${id}/concepts`, {
+      credentials: "include",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: "Untitled Concept",
+      }),
+    });
+
+    if (!response.ok) {
+      return;
+    }
+
+    const newConcept: Concept = await response.json();
+
+    setNotebook((currentNotebook) => {
+      if (currentNotebook === null) {
+        return null;
+      }
+
+      return {
+        ...currentNotebook,
+        concepts: [...currentNotebook.concepts, newConcept],
+      };
+    });
+  }
 
   if (notebook === null) {
     return (
@@ -39,9 +69,10 @@ function NotebookPage() {
             {notebook?.subject || ""}
           </p>
         </div>
-        <Button variant="default">Add Concept</Button>
+        <Button variant="default" onClick={handleAddConcept}>
+          Add Concept
+        </Button>
       </div>
-      <ConceptTableOfContents concepts={notebook.concepts || []} />
 
       <section>
         {notebook?.concepts.map((concept: Concept) => (

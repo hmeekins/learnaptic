@@ -9,7 +9,7 @@ namespace Learnaptic.Api.Features.Concepts
 {
     [Authorize]
     [ApiController]
-    [Route("api/study-guides/{notebookId}/concepts")]
+    [Route("api/notebooks/{notebookId}/concepts")]
     public class ConceptsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
