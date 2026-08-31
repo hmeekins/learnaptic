@@ -3,6 +3,7 @@ import type { Concept } from "@/types/Concepts/Concept";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { API_URL } from "@/config/api";
+import { Button } from "@/components/ui/button";
 import ConceptTableOfContents from "@/components/notebooks/ConceptTableOfContents";
 import ConceptCard from "@/components/notebooks/ConceptCard";
 
@@ -11,7 +12,9 @@ function NotebookPage() {
   const [notebook, setNotebook] = useState<NotebookDetail | null>(null);
   useEffect(() => {
     async function loadNotebook() {
-      const response = await fetch(`${API_URL}/api/notebooks/${id}`);
+      const response = await fetch(`${API_URL}/api/notebooks/${id}`, {
+        credentials: "include",
+      });
       const data: NotebookDetail = await response.json();
       setNotebook(data);
     }
@@ -20,30 +23,32 @@ function NotebookPage() {
 
   if (notebook === null) {
     return (
-      <>
-        <main>
-          <p>Loading study guide...</p>
-        </main>
-      </>
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        <div className="mx-auto max-w-xl">
+          <p>Loading notebook...</p>
+        </div>
+      </main>
     );
   }
   return (
-    <>
-      <main>
-        <header>
-          <h1>{notebook?.title || ""}</h1>
-          <p>{notebook?.subject || ""}</p>
-        </header>
+    <main className="mx-auto max-w-4xl px-6 py-8">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-xl font-bold">{notebook.title || ""}</h1>
+          <p className="text-sm text-muted-foreground">
+            {notebook?.subject || ""}
+          </p>
+        </div>
+        <Button variant="default">Add Concept</Button>
+      </div>
+      <ConceptTableOfContents concepts={notebook.concepts || []} />
 
-        <ConceptTableOfContents concepts={notebook?.concepts || []} />
-
-        <section>
-          {notebook?.concepts.map((concept: Concept) => (
-            <ConceptCard key={concept.id} concept={concept} />
-          ))}
-        </section>
-      </main>
-    </>
+      <section>
+        {notebook?.concepts.map((concept: Concept) => (
+          <ConceptCard key={concept.id} concept={concept} />
+        ))}
+      </section>
+    </main>
   );
 }
 

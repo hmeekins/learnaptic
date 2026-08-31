@@ -47,24 +47,22 @@ function CreateNotebookPage() {
   }
 
   return (
-    <>
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        <div className="mx-auto max-w-xl">
-          <div className="space-y-1">
-            <h1 className="text-xl font-bold">Create Notebook</h1>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-xl">
+        <div className="space-y-1">
+          <h1 className="text-xl font-bold">Create Notebook</h1>
 
-            <p className="text-sm text-muted-foreground">
-              Create a new notebook to organize your learning.
-            </p>
-          </div>
-          <NotebookForm
-            submitLabel="Create Notebook"
-            isSubmitting={isSubmitting}
-            onSubmit={onSubmit}
-          />
+          <p className="text-sm text-muted-foreground">
+            Create a new notebook to organize your learning.
+          </p>
         </div>
-      </main>
-    </>
+        <NotebookForm
+          submitLabel="Create Notebook"
+          isSubmitting={isSubmitting}
+          onSubmit={onSubmit}
+        />
+      </div>
+    </main>
   );
 }
 

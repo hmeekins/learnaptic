@@ -71,21 +71,19 @@ function EditNotebookPage() {
   }
 
   return (
-    <>
-      <main className="mx-auto max-w-6xl px-6 py-8">
-        <div className="mx-auto max-w-xl">
-          <h1 className="text-xl font-bold">Edit Notebook</h1>
-          <NotebookForm
-            initialTitle={notebook.title}
-            initialSubject={notebook.subject ?? ""}
-            initialColor={notebook.color}
-            submitLabel="Save"
-            isSubmitting={isSubmitting}
-            onSubmit={onSubmit}
-          />
-        </div>
-      </main>
-    </>
+    <main className="mx-auto max-w-6xl px-6 py-8">
+      <div className="mx-auto max-w-xl">
+        <h1 className="text-xl font-bold">Edit Notebook</h1>
+        <NotebookForm
+          initialTitle={notebook.title}
+          initialSubject={notebook.subject ?? ""}
+          initialColor={notebook.color}
+          submitLabel="Save"
+          isSubmitting={isSubmitting}
+          onSubmit={onSubmit}
+        />
+      </div>
+    </main>
   );
 }
 
