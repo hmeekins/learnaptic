@@ -1,4 +1,5 @@
 ﻿using Learnaptic.Api.Features.Notebooks;
+using System.Text.Json;
 
 namespace Learnaptic.Api.Features.Concepts
 {
@@ -10,9 +11,21 @@ namespace Learnaptic.Api.Features.Concepts
 
         public Notebook Notebook { get; set; } = null!;
 
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; } = "Untitled Concept";
 
-        public string Content { get; set; } = string.Empty;
+        public JsonDocument Content { get; set; } =
+            JsonDocument.Parse(
+                """
+                {
+                    "type": "doc",
+                    "content": [
+                        {
+                            "type": "paragraph"
+                        }
+                    ]
+                }
+                """
+            );
 
         public int Position { get; set; }
     }

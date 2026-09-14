@@ -1,14 +1,25 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 
 namespace Learnaptic.Api.Features.Concepts.Dtos
 {
     public class CreateConceptDto
     {
-        [Required]
         [StringLength(100, MinimumLength = 3)]
-        public string Title { get; set; } = string.Empty;
+        public string Title { get; set; } = "Untitled Concept";
 
-        [StringLength(20000)]
-        public string Content { get; set; } = string.Empty;
+        public JsonDocument Content { get; set; } =
+            JsonDocument.Parse(
+                """
+                {
+                    "type": "doc",
+                    "content": [
+                        {
+                            "type": "paragraph"
+                        }
+                    ]
+                }
+                """
+            );
     }
 }

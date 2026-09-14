@@ -1,4 +1,6 @@
-﻿namespace Learnaptic.Api.Features.Concepts.Dtos
+﻿using System.Text.Json;
+
+namespace Learnaptic.Api.Features.Concepts.Dtos
 {
     public class GetConceptDto
     {
@@ -6,6 +8,6 @@
 
         public string Title { get; set; } = string.Empty;
 
-        public string Content { get; set; } = string.Empty;
+        public JsonDocument Content { get; set; } = null!;
     }
 }

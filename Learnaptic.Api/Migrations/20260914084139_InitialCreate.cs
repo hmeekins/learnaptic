@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -7,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Learnaptic.Api.Migrations
 {
     /// <inheritdoc />
-    public partial class AddIdentity : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -157,6 +158,122 @@ namespace Learnaptic.Api.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Notebooks",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Subject = table.Column<string>(type: "text", nullable: true),
+                    Color = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastAccessedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notebooks", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Notebooks_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "StudySets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    LastAccessedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_StudySets", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_StudySets_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Concepts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    NotebookId = table.Column<int>(type: "integer", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Content = table.Column<JsonDocument>(type: "jsonb", nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Concepts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Concepts_Notebooks_NotebookId",
+                        column: x => x.NotebookId,
+                        principalTable: "Notebooks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Flashcards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    StudySetId = table.Column<int>(type: "integer", nullable: false),
+                    Position = table.Column<int>(type: "integer", nullable: false),
+                    Question = table.Column<string>(type: "text", nullable: false),
+                    Answer = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flashcards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Flashcards_StudySets_StudySetId",
+                        column: x => x.StudySetId,
+                        principalTable: "StudySets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NotebookStudySet",
+                columns: table => new
+                {
+                    NotebooksId = table.Column<int>(type: "integer", nullable: false),
+                    StudySetsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NotebookStudySet", x => new { x.NotebooksId, x.StudySetsId });
+                    table.ForeignKey(
+                        name: "FK_NotebookStudySet_Notebooks_NotebooksId",
+                        column: x => x.NotebooksId,
+                        principalTable: "Notebooks",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_NotebookStudySet_StudySets_StudySetsId",
+                        column: x => x.StudySetsId,
+                        principalTable: "StudySets",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -193,6 +310,31 @@ namespace Learnaptic.Api.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Concepts_NotebookId",
+                table: "Concepts",
+                column: "NotebookId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flashcards_StudySetId",
+                table: "Flashcards",
+                column: "StudySetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Notebooks_UserId",
+                table: "Notebooks",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NotebookStudySet_StudySetsId",
+                table: "NotebookStudySet",
+                column: "StudySetsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_StudySets_UserId",
+                table: "StudySets",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -214,7 +356,22 @@ namespace Learnaptic.Api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Concepts");
+
+            migrationBuilder.DropTable(
+                name: "Flashcards");
+
+            migrationBuilder.DropTable(
+                name: "NotebookStudySet");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Notebooks");
+
+            migrationBuilder.DropTable(
+                name: "StudySets");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
