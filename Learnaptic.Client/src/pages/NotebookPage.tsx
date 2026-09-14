@@ -10,13 +10,26 @@ import ConceptCard from "@/components/notebooks/ConceptCard";
 function NotebookPage() {
   const { id } = useParams<{ id: string }>();
   const [notebook, setNotebook] = useState<NotebookDetail | null>(null);
+  const [selectedConceptId, setSelectedConceptId] = useState<number | null>(
+    null
+  );
+
   useEffect(() => {
     async function loadNotebook() {
       const response = await fetch(`${API_URL}/api/notebooks/${id}`, {
         credentials: "include",
       });
+
+      if (!response.ok) {
+        return;
+      }
+
       const data: NotebookDetail = await response.json();
       setNotebook(data);
+
+      if (data.concepts.length > 0) {
+        setSelectedConceptId(data.concepts[0].id);
+      }
     }
     loadNotebook();
   }, [id]);
@@ -38,6 +51,7 @@ function NotebookPage() {
     }
 
     const newConcept: Concept = await response.json();
+    setSelectedConceptId(newConcept.id);
 
     setNotebook((currentNotebook) => {
       if (currentNotebook === null) {
@@ -53,32 +67,46 @@ function NotebookPage() {
 
   if (notebook === null) {
     return (
-      <main className="mx-auto max-w-6xl px-6 py-8">
+      <main className="mx-auto max-w-4xl px-6 py-8">
         <div className="mx-auto max-w-xl">
           <p>Loading notebook...</p>
         </div>
       </main>
     );
   }
+
+  const selectedConcept = notebook.concepts.find(
+    (concept) => concept.id === selectedConceptId
+  );
+
   return (
-    <main className="mx-auto max-w-4xl px-6 py-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-xl font-bold">{notebook.title || ""}</h1>
-          <p className="text-sm text-muted-foreground">
-            {notebook?.subject || ""}
-          </p>
-        </div>
-        <Button variant="default" onClick={handleAddConcept}>
-          Add Concept
-        </Button>
+    <main className="grid grid-cols-5 w-full mx-auto px-6 py-8">
+      <div className="col-span-1">
+        <ConceptTableOfContents
+          concepts={notebook.concepts}
+          selectedConceptId={selectedConceptId}
+          onSelectConcept={setSelectedConceptId}
+        />
       </div>
 
-      <section>
-        {notebook?.concepts.map((concept: Concept) => (
-          <ConceptCard key={concept.id} concept={concept} />
-        ))}
-      </section>
+      <div className="col-span-3 px-8">
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-xl font-bold">{notebook.title || ""}</h1>
+            <p className="text-sm text-muted-foreground">
+              {notebook?.subject || ""}
+            </p>
+          </div>
+          <Button variant="default" onClick={handleAddConcept}>
+            Add Concept
+          </Button>
+        </div>
+
+        <section>
+          {selectedConcept && <ConceptCard concept={selectedConcept} />}
+        </section>
+        <div className="h-[1500px]" />
+      </div>
     </main>
   );
 }

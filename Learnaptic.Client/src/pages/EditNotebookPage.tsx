@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { API_URL } from "@/config/api";
 import NotebookForm from "@/components/notebooks/NotebookForm";
-import createSlug from "@/utils/createSlug";
 
 function EditNotebookPage() {
   const { id } = useParams<{ id: string }>();

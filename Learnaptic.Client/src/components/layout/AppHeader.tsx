@@ -14,7 +14,7 @@ function AppHeader() {
   const { user, logout } = useAuth();
 
   return (
-    <header className="border-b">
+    <header className="sticky top-0 z-50 border-b bg-background">
       <div className="flex items-center justify-between  px-4 py-4">
         <div className="flex items-center gap-6">
           <NavLink to="/study-guides" className="flex items-center">
