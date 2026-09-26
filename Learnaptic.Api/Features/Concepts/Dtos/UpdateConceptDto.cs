@@ -6,9 +6,9 @@ namespace Learnaptic.Api.Features.Concepts.Dtos
     public class UpdateConceptDto
     {
         [StringLength(100, MinimumLength = 3)]
-        public string Title { get; set; } = "Untitled Concept";
+        public string? Title { get; set; } = "Untitled Concept";
 
-        public JsonDocument Content { get; set; } =
+        public JsonDocument? Content { get; set; } =
             JsonDocument.Parse(
                 """
                 {

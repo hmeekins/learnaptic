@@ -60,7 +60,7 @@ namespace Learnaptic.Api.Features.Concepts
             return StatusCode(StatusCodes.Status201Created, response);
         }
 
-        [HttpPut("{conceptId}")]
+        [HttpPatch("{conceptId}")]
         public async Task<IActionResult> UpdateConcept(int conceptId, int notebookId, UpdateConceptDto updateConceptDto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -74,8 +74,11 @@ namespace Learnaptic.Api.Features.Concepts
             if (concept == null)
                 return NotFound();
 
-            concept.Title = updateConceptDto.Title;
-            concept.Content = updateConceptDto.Content;
+            if (updateConceptDto.Title != null)
+                concept.Title = updateConceptDto.Title;
+            
+            if (updateConceptDto.Content != null)
+                concept.Content = updateConceptDto.Content;
 
             var now = DateTime.UtcNow;
 

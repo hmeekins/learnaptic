@@ -56,26 +56,17 @@ function useConceptAutosave({
       return false;
     }
 
-    const concept = notebook?.concepts.find(
-      (concept) => concept.id === conceptId
-    );
-
-    if (!concept) {
-      return false;
-    }
-
     setSaveStatus("saving");
 
     const response = await fetch(
       `${API_URL}/api/notebooks/${id}/concepts/${conceptId}`,
       {
-        method: "PUT",
+        method: "PATCH",
         credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          title: concept.title,
           content,
         }),
       }
