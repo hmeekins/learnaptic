@@ -20,6 +20,8 @@ import {
   AlignCenter,
   AlignRight,
   ChevronDown,
+  Undo2,
+  Redo2,
 } from "lucide-react";
 
 import StarterKit from "@tiptap/starter-kit";
@@ -80,6 +82,9 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
 
       isBulletList: editor.isActive("bulletList"),
       isOrderedList: editor.isActive("orderedList"),
+
+      canUndo: editor.can().undo(),
+      canRedo: editor.can().redo(),
     }),
   });
 
@@ -263,6 +268,28 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
             <ListOrdered aria-hidden="true" />
+          </Button>
+
+          <Separator orientation="vertical" className="mt-1 h-5" />
+
+          <Button
+            type="button"
+            variant="ghost"
+            aria-label="Undo"
+            disabled={!editorState?.canUndo}
+            onClick={() => editor.chain().focus().undo().run()}
+          >
+            <Undo2 aria-hidden="true" />
+          </Button>
+
+          <Button
+            type="button"
+            variant="ghost"
+            aria-label="Redo"
+            disabled={!editorState?.canRedo}
+            onClick={() => editor.chain().focus().redo().run()}
+          >
+            <Redo2 aria-hidden="true" />
           </Button>
         </div>
       )}
