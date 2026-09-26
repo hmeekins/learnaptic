@@ -88,6 +88,12 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
     }),
   });
 
+  function toolbarButtonClass(isActive = false) {
+    return `size-7 ${
+      isActive ? "bg-accent text-accent-foreground hover:bg-accent/70" : ""
+    }`;
+  }
+
   return (
     <div
       className="rounded-lg border bg-card"
@@ -109,11 +115,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Bold"
             aria-pressed={editorState?.isBold}
-            className={`size-7 ${
-              editorState?.isBold
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isBold)}
             onClick={() => editor.chain().focus().toggleBold().run()}
           >
             <Bold aria-hidden="true" />
@@ -124,11 +126,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Italic"
             aria-pressed={editorState?.isItalic}
-            className={`size-7 ${
-              editorState?.isItalic
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isItalic)}
             onClick={() => editor.chain().focus().toggleItalic().run()}
           >
             <Italic aria-hidden="true" />
@@ -139,11 +137,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Underline"
             aria-pressed={editorState?.isUnderline}
-            className={`size-7 ${
-              editorState?.isUnderline
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isBold)}
             onClick={() => editor.chain().focus().toggleUnderline().run()}
           >
             <Underline aria-hidden="true" />
@@ -198,11 +192,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Align Left"
             aria-pressed={editorState?.isAlignLeft}
-            className={`size-7 ${
-              editorState?.isAlignLeft
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isAlignLeft)}
             onClick={() => editor.chain().focus().setTextAlign("left").run()}
           >
             <AlignLeft aria-hidden="true" />
@@ -213,11 +203,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Align Center"
             aria-pressed={editorState?.isAlignCenter}
-            className={`size-7 ${
-              editorState?.isAlignCenter
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isAlignCenter)}
             onClick={() => editor.chain().focus().setTextAlign("center").run()}
           >
             <AlignCenter aria-hidden="true" />
@@ -228,11 +214,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Align Right"
             aria-pressed={editorState?.isAlignRight}
-            className={`size-7 ${
-              editorState?.isAlignRight
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isAlignRight)}
             onClick={() => editor.chain().focus().setTextAlign("right").run()}
           >
             <AlignRight aria-hidden="true" />
@@ -245,11 +227,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Bulleted List"
             aria-pressed={editorState?.isBulletList}
-            className={`size-7 ${
-              editorState?.isBulletList
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isBulletList)}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
             <List aria-hidden="true" />
@@ -260,11 +238,7 @@ function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
             variant="ghost"
             aria-label="Numbered List"
             aria-pressed={editorState?.isOrderedList}
-            className={`size-7 ${
-              editorState?.isOrderedList
-                ? "bg-accent text-accent-foreground hover:bg-accent/70"
-                : ""
-            }`}
+            className={toolbarButtonClass(editorState?.isOrderedList)}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
             <ListOrdered aria-hidden="true" />
