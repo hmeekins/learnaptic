@@ -1,8 +1,10 @@
 import type { Dispatch, SetStateAction } from "react";
 import type { JSONContent } from "@tiptap/react";
 import type { NotebookDetail } from "@/types/Notebooks/NotebookDetail";
+import { useRef, useState } from "react";
 import { API_URL } from "@/config/api";
-import { useRef } from "react";
+
+export type SaveStatus = "idle" | "saving" | "saved" | "error";
 
 interface UseConceptAutosaveProps {
   id: string | undefined;
@@ -17,6 +19,7 @@ function useConceptAutosave({
   notebook,
   setNotebook,
 }: UseConceptAutosaveProps) {
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("saved");
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pendingSaveRef = useRef<{
     conceptId: number;
@@ -27,6 +30,8 @@ function useConceptAutosave({
     if (selectedConceptId === null) {
       return;
     }
+
+    setSaveStatus("idle");
 
     if (saveTimeoutRef.current) {
       clearTimeout(saveTimeoutRef.current);
@@ -59,6 +64,8 @@ function useConceptAutosave({
       return false;
     }
 
+    setSaveStatus("saving");
+
     const response = await fetch(
       `${API_URL}/api/notebooks/${id}/concepts/${conceptId}`,
       {
@@ -76,6 +83,7 @@ function useConceptAutosave({
 
     if (!response.ok) {
       console.error("Failed to save concept");
+      setSaveStatus("error");
       return false;
     }
 
@@ -91,6 +99,8 @@ function useConceptAutosave({
         ),
       };
     });
+
+    setSaveStatus("saved");
 
     return true;
   }
@@ -117,6 +127,7 @@ function useConceptAutosave({
   }
 
   return {
+    saveStatus,
     handleConceptContentChange,
     flushPendingSave,
   };

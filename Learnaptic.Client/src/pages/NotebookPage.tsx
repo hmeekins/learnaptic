@@ -14,12 +14,13 @@ function NotebookPage() {
   const [selectedConceptId, setSelectedConceptId] = useState<number | null>(
     null
   );
-  const { handleConceptContentChange, flushPendingSave } = useConceptAutosave({
-    id,
-    selectedConceptId,
-    notebook,
-    setNotebook,
-  });
+  const { saveStatus, handleConceptContentChange, flushPendingSave } =
+    useConceptAutosave({
+      id,
+      selectedConceptId,
+      notebook,
+      setNotebook,
+    });
 
   useEffect(() => {
     async function loadNotebook() {
@@ -130,6 +131,7 @@ function NotebookPage() {
             <ConceptEditor
               key={selectedConcept.id}
               content={selectedConcept.content}
+              saveStatus={saveStatus}
               onChange={handleConceptContentChange}
             />
           )}

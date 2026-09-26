@@ -1,3 +1,4 @@
+import type { SaveStatus } from "@/hooks/useConceptAutosave";
 import { useState, useEffect } from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import type { JSONContent } from "@tiptap/core";
@@ -26,10 +27,11 @@ import TextAlign from "@tiptap/extension-text-align";
 
 type ConceptEditorProps = {
   content: JSONContent;
+  saveStatus: SaveStatus;
   onChange: (content: JSONContent) => void;
 };
 
-function ConceptEditor({ content, onChange }: ConceptEditorProps) {
+function ConceptEditor({ content, saveStatus, onChange }: ConceptEditorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const editor = useEditor({
     extensions: [
@@ -266,6 +268,11 @@ function ConceptEditor({ content, onChange }: ConceptEditorProps) {
       )}
 
       <EditorContent editor={editor} className="concept-editor" />
+      <div className="flex justify-end px-3 py-2 text-xs text-muted-foreground">
+        {isEditing && saveStatus === "saving" && <span>Saving...</span>}
+        {isEditing && saveStatus === "saved" && <span>Saved</span>}
+        {saveStatus === "error" && <span>Couldn't save</span>}
+      </div>
     </div>
   );
 }
