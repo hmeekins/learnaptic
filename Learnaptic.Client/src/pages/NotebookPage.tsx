@@ -90,7 +90,7 @@ function NotebookPage() {
       </div>
 
       <div className="col-span-3 px-8">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center mb-5">
           <div>
             <h1 className="text-xl font-bold">{notebook.title || ""}</h1>
             <p className="text-sm text-muted-foreground">

@@ -119,6 +119,14 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.concept-editor .ProseMirror {
+  height: calc(100vh - 18rem);
+  min-height: 400px;
+  overflow-y: auto;
+  padding: 1rem;
+  outline: none;
+}
+
 .concept-editor h2 {
   font-size: 1.5rem;
   font-weight: 700;

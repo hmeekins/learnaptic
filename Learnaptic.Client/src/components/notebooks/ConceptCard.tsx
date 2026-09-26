@@ -8,7 +8,6 @@ type ConceptCardProps = {
 function ConceptCard({ concept }: ConceptCardProps) {
   return (
     <section id={`concept-${concept.id}`}>
-      <h2>{concept.title}</h2>
       <ConceptEditor content={concept.content} />
     </section>
   );
