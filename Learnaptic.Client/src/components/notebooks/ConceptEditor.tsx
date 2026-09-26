@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
 import type { JSONContent } from "@tiptap/core";
 import { Button } from "@/components/ui/button";
@@ -26,9 +26,10 @@ import TextAlign from "@tiptap/extension-text-align";
 
 type ConceptEditorProps = {
   content: JSONContent;
+  onChange: (content: JSONContent) => void;
 };
 
-function ConceptEditor({ content }: ConceptEditorProps) {
+function ConceptEditor({ content, onChange }: ConceptEditorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const editor = useEditor({
     extensions: [
@@ -38,7 +39,24 @@ function ConceptEditor({ content }: ConceptEditorProps) {
       }),
     ],
     content,
+    onUpdate: ({ editor }) => {
+      onChange(editor.getJSON());
+    },
   });
+
+  useEffect(() => {
+    if (!editor) {
+      return;
+    }
+
+    editor.setOptions({
+      editorProps: {
+        attributes: {
+          spellcheck: isEditing ? "true" : "false",
+        },
+      },
+    });
+  }, [editor, isEditing]);
 
   if (!editor) {
     return null;

@@ -1,11 +1,12 @@
 import type { NotebookDetail } from "@/types/Notebooks/NotebookDetail";
 import type { Concept } from "@/types/Concepts/Concept";
-import { useState, useEffect } from "react";
+import type { JSONContent } from "@tiptap/react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { API_URL } from "@/config/api";
 import { Button } from "@/components/ui/button";
 import ConceptTableOfContents from "@/components/notebooks/ConceptTableOfContents";
-import ConceptCard from "@/components/notebooks/ConceptCard";
+import ConceptEditor from "@/components/notebooks/ConceptEditor";
 
 function NotebookPage() {
   const { id } = useParams<{ id: string }>();
@@ -13,6 +14,11 @@ function NotebookPage() {
   const [selectedConceptId, setSelectedConceptId] = useState<number | null>(
     null
   );
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pendingSaveRef = useRef<{
+    conceptId: number;
+    content: JSONContent;
+  } | null>(null);
 
   useEffect(() => {
     async function loadNotebook() {
@@ -35,6 +41,12 @@ function NotebookPage() {
   }, [id]);
 
   async function handleAddConcept() {
+    const saved = await flushPendingSave();
+
+    if (!saved) {
+      return;
+    }
+
     const response = await fetch(`${API_URL}/api/notebooks/${id}/concepts`, {
       credentials: "include",
       method: "POST",
@@ -79,13 +91,111 @@ function NotebookPage() {
     (concept) => concept.id === selectedConceptId
   );
 
+  async function handleSelectConcept(conceptId: number) {
+    const saved = await flushPendingSave();
+
+    if (!saved) {
+      return;
+    }
+
+    setSelectedConceptId(conceptId);
+  }
+
+  function handleConceptContentChange(content: JSONContent) {
+    if (!selectedConcept) {
+      return;
+    }
+
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+    }
+
+    pendingSaveRef.current = {
+      conceptId: selectedConcept.id,
+      content,
+    };
+
+    saveTimeoutRef.current = setTimeout(async () => {
+      await flushPendingSave();
+    }, 750);
+  }
+
+  async function saveConcept(
+    conceptId: number,
+    content: JSONContent
+  ): Promise<boolean> {
+    const concept = notebook?.concepts.find(
+      (concept) => concept.id === conceptId
+    );
+
+    if (!concept) {
+      return false;
+    }
+
+    const response = await fetch(
+      `${API_URL}/api/notebooks/${id}/concepts/${conceptId}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: concept.title,
+          content,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Failed to save concept");
+      return false;
+    }
+
+    setNotebook((currentNotebook) => {
+      if (!currentNotebook) {
+        return null;
+      }
+
+      return {
+        ...currentNotebook,
+        concepts: currentNotebook.concepts.map((concept) =>
+          concept.id === conceptId ? { ...concept, content } : concept
+        ),
+      };
+    });
+
+    return true;
+  }
+
+  async function flushPendingSave(): Promise<boolean> {
+    const pendingSave = pendingSaveRef.current;
+
+    if (!pendingSave) {
+      return true;
+    }
+
+    if (saveTimeoutRef.current) {
+      clearTimeout(saveTimeoutRef.current);
+      saveTimeoutRef.current = null;
+    }
+
+    const saved = await saveConcept(pendingSave.conceptId, pendingSave.content);
+
+    if (saved && pendingSaveRef.current === pendingSave) {
+      pendingSaveRef.current = null;
+    }
+
+    return saved;
+  }
+
   return (
     <main className="grid grid-cols-5 w-full mx-auto px-6 py-8">
       <div className="col-span-1">
         <ConceptTableOfContents
           concepts={notebook.concepts}
           selectedConceptId={selectedConceptId}
-          onSelectConcept={setSelectedConceptId}
+          onSelectConcept={handleSelectConcept}
         />
       </div>
 
@@ -103,7 +213,13 @@ function NotebookPage() {
         </div>
 
         <section>
-          {selectedConcept && <ConceptCard concept={selectedConcept} />}
+          {selectedConcept && (
+            <ConceptEditor
+              key={selectedConcept.id}
+              content={selectedConcept.content}
+              onChange={handleConceptContentChange}
+            />
+          )}
         </section>
         <div className="h-[1500px]" />
       </div>
